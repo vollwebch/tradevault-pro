@@ -67,7 +67,7 @@ export default function LandingPage() {
               <a href="#features" className="text-sm text-zinc-400 hover:text-white transition-colors">Características</a>
               <a href="#stats" className="text-sm text-zinc-400 hover:text-white transition-colors">Plataforma</a>
               <a href="#testimonials" className="text-sm text-zinc-400 hover:text-white transition-colors">Testimonios</a>
-              <Link href="/dashboard">
+              <Link href="/dashboard/">
                 <Button className="text-sm font-medium px-5 py-2 rounded-lg text-white" style={{ background: '#e31937' }} onMouseEnter={e => e.currentTarget.style.background = '#c41530'} onMouseLeave={e => e.currentTarget.style.background = '#e31937'}>
                   Iniciar Sesión
                 </Button>
@@ -90,7 +90,7 @@ export default function LandingPage() {
             <a href="#stats" className="block text-sm text-zinc-400 hover:text-white" onClick={() => setMobileMenu(false)}>Plataforma</a>
             <a href="#testimonials" className="block text-sm text-zinc-400 hover:text-white" onClick={() => setMobileMenu(false)}>Testimonios</a>
             <div className="flex gap-2 pt-2">
-              <Link href="/dashboard" className="flex-1"><Button className="w-full text-white" style={{ background: '#e31937' }}>Iniciar Sesión</Button></Link>
+              <Link href="/dashboard/" className="flex-1"><Button className="w-full text-white" style={{ background: '#e31937' }}>Iniciar Sesión</Button></Link>
               <Link href="/dashboard#register" className="flex-1"><Button variant="outline" className="w-full border-white/10 text-white">Registrarse</Button></Link>
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16" style={{ animation: 'fadeInUp 0.8s ease-out 0.3s both' }}>
-            <Link href="/dashboard">
+            <Link href="/dashboard/">
               <Button size="lg" className="text-base font-semibold px-8 py-3 rounded-xl text-white shadow-lg shadow-[#e31937]/25 hover:shadow-[#e31937]/40 transition-all" style={{ background: '#e31937' }} onMouseEnter={e => e.currentTarget.style.background = '#c41530'} onMouseLeave={e => e.currentTarget.style.background = '#e31937'}>
                 Iniciar Sesión <ArrowRight size={18} className="ml-2" />
               </Button>
@@ -350,7 +350,7 @@ export default function LandingPage() {
                   Crear Cuenta Gratis <ArrowRight size={18} className="ml-2" />
                 </Button>
               </Link>
-              <Link href="/dashboard">
+              <Link href="/dashboard/">
                 <Button size="lg" variant="outline" className="text-base font-semibold px-8 py-3 rounded-xl border-white/15 text-white hover:bg-white/5">
                   Ya tengo cuenta
                 </Button>

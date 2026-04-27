@@ -4,16 +4,7 @@
   "appType": "app",
   "caseSensitive": false,
   "basePath": "",
-  "redirects": [
-    {
-      "source": "/:path+/",
-      "destination": "/:path+",
-      "internal": true,
-      "priority": true,
-      "statusCode": 308,
-      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
-    }
-  ],
+  "redirects": [],
   "headers": [],
   "rewrites": {
     "beforeFiles": [],
