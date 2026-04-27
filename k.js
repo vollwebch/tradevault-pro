@@ -8,9 +8,7 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   http.createServer((req, res) => {
     let url = req.url || '/';
-    // Strip trailing slash before passing to Next.js
     if (url.length > 1 && url.endsWith('/')) url = url.slice(0, -1);
-    // Replace req.url so Next.js sees clean URL
     const origUrl = req.url;
     req.url = url;
     handle(req, res, parse(url, true));
