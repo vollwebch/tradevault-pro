@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+db-data/
+*.log
+server.cjs
+server.mjs
+start.sh
+api-routes-backup/
+.env
+.vercel/
+.git/

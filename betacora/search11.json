@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.researchgate.net/publication/365379302_Tesla_Inc_Stock_Prediction_using_Sentiment_Analysis",
+    "name": "(PDF) Tesla Inc. Stock Prediction Using Sentiment Analysis",
+    "snippet": "The goal of this research is to produce a stock price prediction model that combines the power of LSTM and social media sentiment analysis to help investors ...\nThis research integrates the LSTM method with social media sentiment analysis, specifically on Tesla (TSLA) stock, with more sophisticated pre-processing ...",
+    "host_name": "www.researchgate.net",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.uowoajournals.org/aabfj/article/960/galley/954/download",
+    "name": "Tesla Inc. Stock Prediction using Sentiment Analysis",
+    "snippet": "Cited by 20 — Sentiment Analysis on Social media has a strong correlation with the fluctuation of the prices . It uses Algorithmic trading and Deep. Learning Algorithms, ...\nSentiment Analysis on Social media has a strong correlation with the fluctuation of the prices. It uses Algorithmic trading and Deep. Learning Algorithms, ...",
+    "host_name": "www.uowoajournals.org",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.worldscientific.com/doi/pdf/10.1142/S0218843024500072?download=true&srsltid=AfmBOorUVbp1pX8CEnNWZdLDtvD3UdSGEDhGgRbzEzZFEo0rCdJEvH2w",
+    "name": "Tesla Stock Prediction Based on Twitter Comments'",
+    "snippet": "Mar 18, 2024 — 10 Simple sentiment analysis was shown to be used to predict the direction of the stock market. The components of sentiment analysis are lexicon ...",
+    "host_name": "www.worldscientific.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://arxiv.org/pdf/2309.00136",
+    "name": "Predicting Financial Market Trends using Time Series",
+    "snippet": "2023 · Cited by 10 — One of the primary advantages of using NLP and sentiment analysis for predicting stock prices is that it can provide a more holistic view of the market. By ...\nThis comprehensive project aims to explore the intricate relationship between social media sentiment, specifically on Twitter, and stock market performance for.",
+    "host_name": "arxiv.org",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.kaggle.com/code/shtrausslearning/news-sentiment-based-trading-strategy",
+    "name": "News sentiment based trading strategy",
+    "snippet": "NLP provides a way to monitor financial market sentiments by utilising any text based source (eg. news articles, reports, social media , expert opinions) ...\nThe goal of this study is to build a trading strategy that uses NLP to extract information from the news headlines ... Tesla's (TSLA -1.8%) stock price target is ...",
+    "host_name": "www.kaggle.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8n.io/workflows/4093-tesla-news-and-sentiment-analyst-tool-powered-by-deepseek-chat",
+    "name": "Tesla news and sentiment analyst tool (Powered by",
+    "snippet": "This AI-powered agent performs real-time sentiment analysis on Tesla (TSLA) news to support trading decisions. It aggregates headlines from 5 trusted ...\nFree · Business/Productivity This AI-powered agent performs real-time sentiment analysis on Tesla (TSLA) news to support trading decisions. Missing: NLP scoring",
+    "host_name": "n8n.io",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.scribd.com/document/872064237/The-Role-of-Sentiment-Analysis-in-Stock-Market-Predictions",
+    "name": "Tesla Stock Sentiment Analysis Insights | PDF | Social Media",
+    "snippet": "2 By analyzing social media sentiment , investors can anticipate market reactions to events, such as company announcements, economic news , or political ...",
+    "host_name": "www.scribd.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ijrpr.com/uploads/V5ISSUE7/IJRPR31832.pdf",
+    "name": "Tesla Inc. stock Prediction Using Sentiment Analysis",
+    "snippet": "Objective: The main hypothesis of this work is to determine the efficiency of various machine learning algorithms as a predictor of Tesla's stock price. In.",
+    "host_name": "ijrpr.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://bsic.it/from-tweets-to-tickers-trading-tesla-using-musks-sentiments",
+    "name": "From Tweets to Tickers: Trading Tesla Using Musk's",
+    "snippet": "Apr 21, 2024 — In this paper, we will apply NLP methods to sentiment analysis, by classifying the tweets of Elon Musk into three categories: positive, negative and neutral.\nIn this paper, we will apply NLP methods to sentiment analysis, by classifying the tweets of Elon Musk into three categories: positive, negative and neutral. Missing: TSLA | Show results with: TSLA",
+    "host_name": "bsic.it",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=2abEhEj61Qw",
+    "name": "24 Looi Han Liong - Stock Prediction on TSLA using",
+    "snippet": "3 years ago ...more ...",
+    "host_name": "www.youtube.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

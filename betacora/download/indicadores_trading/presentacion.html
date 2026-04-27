@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Indicadores de Trading</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  @media screen {
+    html { zoom: 0.45; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { 
+    background: #0D1117; 
+    font-family: 'DejaVu Sans', sans-serif;
+    color: #E6EDF3;
+    width: 1920px;
+  }
+  .page {
+    width: 1920px;
+    min-height: 1080px;
+    background: #0D1117;
+    position: relative;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    padding: 55px 70px;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* COVER */
+  .cover { justify-content: center; align-items: center; text-align: center; }
+  .cover-tag { font-size: 16px; color: #0095FF; letter-spacing: 5px; text-transform: uppercase; }
+  .cover-title { font-size: 96px; font-weight: 900; color: #E6EDF3; letter-spacing: -3px; line-height: 1.1; margin-top: 20px; }
+  .cover-line { width: 250px; height: 4px; background: #00D68F; margin: 40px auto; border-radius: 3px; }
+  .cover-desc { font-size: 22px; color: #8B949E; max-width: 800px; line-height: 1.7; }
+  .cover-sub { font-size: 20px; color: #58616e; margin-top: 35px; font-weight: 300; }
+
+  /* SLIDE */
+  .slide-header { margin-bottom: 20px; flex-shrink: 0; }
+  .slide-num { font-size: 13px; color: #0095FF; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px; }
+  .slide-title { font-size: 42px; font-weight: 800; color: #E6EDF3; }
+  .slide-desc { font-size: 17px; color: #8B949E; margin-top: 10px; line-height: 1.5; }
+  .slide-image { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
+  .slide-image img { max-width: 1100px; max-height: 780px; width: auto; height: auto; border-radius: 10px; }
+  .slide-footer { font-size: 12px; color: #30363D; text-align: right; margin-top: 10px; flex-shrink: 0; }
+
+  /* SUMMARY GRID */
+  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; flex: 1; margin-top: 15px; align-content: start; }
+  .summary-card { background: #161B22; border-radius: 12px; padding: 22px; border: 1px solid #30363D; text-align: center; }
+  .summary-card .num { font-size: 36px; font-weight: 900; color: #0095FF; }
+  .summary-card .name { font-size: 16px; font-weight: 700; color: #E6EDF3; margin-top: 6px; }
+  .summary-card .desc { font-size: 13px; color: #8B949E; margin-top: 8px; line-height: 1.5; }
+  .tip-box { text-align: center; margin-top: 20px; padding: 18px; background: #161B22; border-radius: 10px; border: 1px solid #00D68F; flex-shrink: 0; }
+  .tip-box .tip-title { font-size: 15px; color: #00D68F; font-weight: 700; }
+  .tip-box .tip-text { font-size: 14px; color: #8B949E; margin-top: 8px; }
+
+  /* FINAL PAGE */
+  .final { justify-content: center; align-items: center; text-align: center; }
+  .final-title { font-size: 64px; font-weight: 900; color: #00D68F; line-height: 1.2; }
+  .final-rule { font-size: 26px; color: #E6EDF3; margin-top: 40px; font-weight: 700; }
+  .final-sub { font-size: 18px; color: #8B949E; margin-top: 20px; line-height: 1.7; max-width: 900px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="page cover">
+  <div class="cover-tag">Guia Visual Completa</div>
+  <div class="cover-title">Tus Indicadores<br>de Trading</div>
+  <div class="cover-line"></div>
+  <div class="cover-desc">Aprende a leer tus 6 indicadores como un profesional. Explicacion visual y sencilla para que tomes mejores decisiones en cada operacion.</div>
+  <div class="cover-sub">ADX / DMI &bull; RSI &bull; Estocastico &bull; MACD &bull; EMA 45 &bull; MA 200</div>
+</div>
+
+<!-- 1: ADX -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Indicador 01 / 06</div>
+    <div class="slide-title">ADX - El Medidor de Energia</div>
+    <div class="slide-desc">Te dice que tan FUERTE es la tendencia. No mira la direccion, solo la fuerza.</div>
+  </div>
+  <div class="slide-image"><img src="01_ADX_energia.png" alt="ADX"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 2: DI -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Indicador 02 / 06</div>
+    <div class="slide-title">+DI vs -DI - Quien Va Ganando</div>
+    <div class="slide-desc">+DI = Compradores (verde) &bull; -DI = Vendedores (rojo). Solo importa si ADX &gt; 25.</div>
+  </div>
+  <div class="slide-image"><img src="02_DI_quien_gana.png" alt="DI"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 3: RSI -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Indicador 03 / 06</div>
+    <div class="slide-title">RSI - Velocimetro del Mercado</div>
+    <div class="slide-desc">Mide si el precio va demasiado rapido. Sobreventa (&lt;30) = LONG &bull; Sobrecompra (&gt;70) = SHORT.</div>
+  </div>
+  <div class="slide-image"><img src="03_RSI_velocimetro.png" alt="RSI"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 4: ESTOCASTICO -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Indicador 04 / 06</div>
+    <div class="slide-title">Estocastico - El Rapido y Nervioso</div>
+    <div class="slide-desc">Como el RSI pero reacciona antes. %K (azul) cruza %D (naranja) = senal de entrada.</div>
+  </div>
+  <div class="slide-image"><img src="04_Estocastico_rapido.png" alt="Estocastico"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 5: MACD -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Indicador 05 / 06</div>
+    <div class="slide-title">MACD - El GPS del Mercado</div>
+    <div class="slide-desc">Te dice la direccion y si el precio esta acelerando o frenando. El histograma es clave.</div>
+  </div>
+  <div class="slide-image"><img src="05_MACD_GPS.png" alt="MACD"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 6: EMA 45 -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Indicador 06a / 06</div>
+    <div class="slide-title">EMA 45 - La Carretera Principal</div>
+    <div class="slide-desc">La linea que sigue al precio. Precio arriba = solo LONGS &bull; Precio abajo = solo SHORTS.</div>
+  </div>
+  <div class="slide-image"><img src="06_EMA45_carretera.png" alt="EMA 45"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 7: MA 200 -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Indicador 06b / 06</div>
+    <div class="slide-title">MA 200 - La Autopista Gigante</div>
+    <div class="slide-desc">La tendencia GENERAL a largo plazo. En 1 minuto = las ultimas 3 horas y 20 minutos.</div>
+  </div>
+  <div class="slide-image"><img src="07_MA200_autopista.png" alt="MA 200"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 8: ADX + PRECIO -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Concepto Clave</div>
+    <div class="slide-title">ADX + Precio = La Combinacion Mas Importante</div>
+    <div class="slide-desc">Cuando precio y ADX van en la misma direccion = tendencia real. Direcciones opuestas = movimiento falso.</div>
+  </div>
+  <div class="slide-image"><img src="08_ADX_precio_combinacion.png" alt="ADX Precio"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 9: CHECKLIST -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Paso Final</div>
+    <div class="slide-title">Tu Checklist Antes de Operar</div>
+    <div class="slide-desc">Revisa TODOS estos pasos antes de entrar. Si no se cumplen = NO ENTRAS.</div>
+  </div>
+  <div class="slide-image"><img src="09_Checklist_completo.png" alt="Checklist"></div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- 10: SUMMARY -->
+<div class="page">
+  <div class="slide-header">
+    <div class="slide-num">Resumen Rapido</div>
+    <div class="slide-title">Los 6 Indicadores en 30 Segundos</div>
+  </div>
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="num">1</div>
+      <div class="name">MA 200</div>
+      <div class="desc">A donde sopla el viento. Tendencia general. Precio arriba = alcista.</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">2</div>
+      <div class="name">EMA 45</div>
+      <div class="desc">La carretera. Confirma la direccion y sirve como soporte/resistencia.</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">3</div>
+      <div class="name">ADX</div>
+      <div class="desc">Hay gasolina? Menos de 20 = NO operes. Mas de 25 = hay tendencia.</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">4</div>
+      <div class="name">+DI / -DI</div>
+      <div class="desc">Quien gana? Compradores vs Vendedores. Solo importa con ADX &gt; 25.</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">5</div>
+      <div class="name">RSI</div>
+      <div class="desc">Velocimetro. Menos de 30 = sobreventa (LONG). Mas de 70 = sobrecompra (SHORT).</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">6</div>
+      <div class="name">Estocastico</div>
+      <div class="desc">Como el RSI pero mas rapido. Cruce %K/%D en zonas extremas = entrada.</div>
+    </div>
+  </div>
+  <div class="tip-box">
+    <div class="tip-title">TRUCO RAPIDO</div>
+    <div class="tip-text">Con ADX &gt; 25 + DI dominante + 1 indicador de momentum confirmando = ya tienes suficiente para operar.</div>
+  </div>
+  <div class="slide-footer">ADIMAS &bull; TSLA 1-Min Scalping</div>
+</div>
+
+<!-- FINAL -->
+<div class="page final">
+  <div class="final-title">La mejor operacion<br>es NO operar.</div>
+  <div class="final-rule">Paciencia + Disciplina = Beneficio</div>
+  <div class="final-sub">No necesitas operar todos los dias. Hay 252 dias de trading al ano. Espera los setups perfectos, confirma con tus indicadores, y entra solo cuando todo cuadre. Tu cuenta de fondeo te lo agradecera.</div>
+</div>
+
+</body>
+</html>

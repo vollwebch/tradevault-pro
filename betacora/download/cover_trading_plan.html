@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de Trading Scalping NVDA/TSLA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;700;900&display=swap" rel="stylesheet">
+<style>
+@page {
+  size: 794px 1123px;
+  margin: 0;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 794px;
+  height: 1123px;
+  background: #f4f3f2;
+  font-family: 'Inter', sans-serif;
+}
+@media screen {
+  html { height: auto; display: flex; justify-content: center; }
+  body { transform-origin: top center; scale: min(1, calc(100vh / 1123)); margin: 0 auto; }
+}
+
+/* Layer 0 - Background fill */
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  background: #f4f3f2;
+  z-index: 0;
+}
+
+/* Layer 1 - Grid pattern */
+.cover-layer-1 {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+.grid-pattern {
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(to right, rgba(52, 92, 212, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(52, 92, 212, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Layer 2 - Structure */
+.cover-layer-2 {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.anchor-line {
+  position: absolute;
+  left: 95px;
+  top: 112px;
+  bottom: 112px;
+  width: 6px;
+  background: #345cd4;
+}
+.meta-separator {
+  position: absolute;
+  left: 150px;
+  top: 760px;
+  width: 340px;
+  height: 1px;
+  background: rgba(52, 92, 212, 0.35);
+}
+
+/* Layer 3 - Content */
+.cover-layer-3 {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+.kicker {
+  position: absolute;
+  left: 150px;
+  top: 170px;
+  font-size: 16pt;
+  font-weight: 400;
+  letter-spacing: 3pt;
+  text-transform: uppercase;
+  color: rgba(27, 26, 24, 0.55);
+}
+.hero-title {
+  position: absolute;
+  left: 150px;
+  top: 280px;
+  max-width: 580px;
+  font-size: 52pt;
+  font-weight: 900;
+  line-height: 1.12;
+  color: #1b1a18;
+}
+.summary {
+  position: absolute;
+  left: 150px;
+  top: 500px;
+  max-width: 440px;
+  font-size: 16pt;
+  font-weight: 400;
+  line-height: 1.65;
+  color: rgba(27, 26, 24, 0.78);
+}
+.meta {
+  position: absolute;
+  left: 150px;
+  top: 810px;
+  font-size: 18pt;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(27, 26, 24, 0.70);
+}
+.footer-line {
+  position: absolute;
+  left: 150px;
+  bottom: 50px;
+  font-size: 12pt;
+  font-weight: 400;
+  letter-spacing: 2pt;
+  text-transform: uppercase;
+  color: rgba(27, 26, 24, 0.35);
+}
+</style>
+</head>
+<body>
+
+<div class="cover-bg"></div>
+
+<div class="cover-layer-1">
+  <div class="grid-pattern"></div>
+</div>
+
+<div class="cover-layer-2">
+  <div class="anchor-line"></div>
+  <div class="meta-separator"></div>
+</div>
+
+<div class="cover-layer-3">
+  <div class="kicker">Plan de Trading</div>
+  <div class="hero-title">Scalping<br>NVDA / TSLA</div>
+  <div class="summary">Sistema completo de scalping intradia basado en datos historicos con filtros macro VIX y QQQ. Disenado para cuentas de fondeo con gestion de riesgo estricta y analisis multi-timeframe.</div>
+  <div class="meta">4 Setups de Alta Probabilidad<br>Filtros Macro + MTFA + Prop Trading</div>
+  <div class="footer-line">2026 &mdash; Analisis Basado en Datos</div>
+</div>
+
+</body>
+</html>

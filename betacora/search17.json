@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.barchart.com/stocks/quotes/TSLA/gamma-exposure",
+    "name": "TSLA Gamma Exposure (GEX) for Tesla Stock",
+    "snippet": "TSLA Gamma Exposure (GEX ) measures the change in delta exposure for options based on changes in the underlying price.",
+    "host_name": "www.barchart.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.insiderfinance.io/gamma-exposure/TSLA",
+    "name": "TSLA Gamma Exposure (GEX)",
+    "snippet": "This page provides real-time gamma exposure (GEX) analysis for TSLA options , showing how market maker hedging activity creates key support and resistance levels ... Read more",
+    "host_name": "www.insiderfinance.io",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gexstream.com",
+    "name": "GEXStream - Real-Time Gamma Exposure Analytics for",
+    "snippet": "Real-time options gamma exposure analytics and dealer positioning insights for professional traders. Track GEX ratios, market maker positioning, and options ...",
+    "host_name": "gexstream.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/options/comments/hk7nqe/tesla_infinity_call_gamma_squeeze",
+    "name": "Tesla Infinity Call Gamma Squeeze : r/options",
+    "snippet": "Essentially Tesla every few months will undergone an “infinity” call gamma squeeze that will keep pumping the stock up. Read more",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://fintel.io/sgex/us/tsla",
+    "name": "TSLA / Tesla, Inc. Gamma Exposure - Fintel Labs",
+    "snippet": "The Gamma Exposure ( GEX ) is a measure that shows how exposed options dealers and market makers are to movements in the share price of an underlying security. Read more",
+    "host_name": "fintel.io",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://flashalpha.com/stock/tsla",
+    "name": "TSLA Options Analytics — Max Pain, GEX, IV Rank &",
+    "snippet": "Gamma Exposure (GEX) measures the total gamma held by options market makers across all strikes and expirations for TSLA. When dealers are long gamma (positive ... Read more",
+    "host_name": "flashalpha.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.tradingview.com/chart/TSLA/8XPAtQ46-Tesla-TSLA-Momentum-Reload-or-Major-Cooldown",
+    "name": "Tesla (TSLA) — Momentum Reload or Major Cooldown?",
+    "snippet": "16 Oct 2025 — Gamma interpretation: As long as price holds between $425–$440, market makers maintain positive gamma , keeping price pinned and range-bound. A ... Read more",
+    "host_name": "www.tradingview.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.barchart.com/stocks/quotes/TSLA.TO/gamma-exposure",
+    "name": "Tesla CDR (Cad Hedged) (TSLA.TO)",
+    "snippet": "Gamma exposure levels are always positive for call options and negative for put options. They are generally the highest around the price of the underlying and ... Read more",
+    "host_name": "www.barchart.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.investing.com/news/stock-market-news/is-teslas-stock-surge-a-massive-options-gamma-squeeze--glj-research-93CH-3777132",
+    "name": "Is Tesla's stock surge a 'massive' options gamma squeeze",
+    "snippet": "17 Dec 2024 — The increase in demand for call options forces market makers to buy Tesla's stock to hedge the risk of selling these options , causing the ... Read more",
+    "host_name": "www.investing.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.daytrading.com/tesla-options",
+    "name": "Tesla Options Trading - Gamma Hedging & Momentum",
+    "snippet": "1 Mar 2026 — Tesla's stock is driven by options flows, gamma hedging, and momentum . Discover how the reflexive loop shapes risk, returns, and volatility.",
+    "host_name": "www.daytrading.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

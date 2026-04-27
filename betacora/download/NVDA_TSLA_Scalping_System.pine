@@ -1,0 +1,276 @@
+//@version=5
+strategy("Scalping NVDA/TSLA | 4 Setups", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.04, slippage=2, initial_capital=10000, currency=currency.USD)
+
+// === FILTRO VIX ===
+vix_sym = input.symbol("VIX", "VIX Symbol")
+vix_long = input.float(18.0, "VIX < = LONG")
+vix_no_trade = input.float(28.0, "VIX > = NO TRADE")
+
+// === FILTRO QQQ ===
+qqq_sym = input.symbol("QQQ", "QQQ Symbol")
+use_qqq = input.bool(true, "Use QQQ Filter")
+
+// === INDICADORES ===
+ema_fast = input.int(9, "EMA Fast", minval=2, maxval=50)
+ema_slow = input.int(20, "EMA Slow", minval=5, maxval=100)
+use_vwap = input.bool(true, "Show VWAP")
+show_pdh = input.bool(true, "Show PDH/PDL")
+show_ob = input.bool(true, "Show Order Blocks")
+ob_lookback = input.int(20, "OB Lookback", minval=5, maxval=50)
+
+// === RIESGO ===
+rr_ratio = input.float(2.0, "R:R Ratio", step=0.5)
+max_trades = input.int(5, "Max Trades/Day", minval=1, maxval=20)
+daily_loss = input.float(3.0, "Max Daily Loss %", step=0.5)
+
+// === HORARIOS ===
+use_time = input.bool(true, "Filter by Time")
+sess_start = input.int(9, "Session Start", minval=0, maxval=23)
+sess_end = input.int(16, "Session End", minval=0, maxval=23)
+avoid_lunch = input.bool(true, "Avoid Lunch")
+lunch_start = input.int(11, "Lunch Start", minval=10, maxval=13)
+lunch_end = input.int(13, "Lunch End", minval=11, maxval=14)
+
+// === SETUPS ===
+setup_1 = input.bool(true, "Setup 1: Tendencia Limpia")
+setup_2 = input.bool(true, "Setup 2: Gap and Go")
+setup_3 = input.bool(true, "Setup 3: VIX Crash Reversal")
+setup_4 = input.bool(true, "Setup 4: Short en Miedo")
+
+// === COLORES ===
+col_long = input.color(color.teal, "Color LONG")
+col_short = input.color(color.red, "Color SHORT")
+col_sl = input.color(color.new(color.red, 60), "Color SL")
+col_tp = input.color(color.new(color.green, 60), "Color TP")
+
+// === VIX DATA ===
+vix_close = request.security(vix_sym, "D", close[1], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+vix_prev = request.security(vix_sym, "D", close[2], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+vix_high_d = request.security(vix_sym, "D", high[1], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+vix_change = vix_close - vix_prev
+vix_spike = vix_change > 3.0
+vix_bullish = vix_close < vix_long
+vix_bearish = vix_close >= vix_long
+vix_no_op = vix_close > vix_no_trade
+
+// === QQQ DATA ===
+qqq_close = request.security(qqq_sym, timeframe.period, close, gaps=barmerge.gaps_off)
+qqq_open_d = request.security(qqq_sym, "D", open, gaps=barmerge.gaps_off)
+qqq_bullish = qqq_close > qqq_open_d
+qqq_bearish = qqq_close < qqq_open_d
+
+// === DIRECTION ===
+direction = vix_no_op ? "NONE" : (vix_bullish and (use_qqq ? qqq_bullish : true) ? "LONG" : (vix_bearish and (use_qqq ? qqq_bearish : true) ? "SHORT" : "NONE"))
+
+// === INDICADORES ===
+ema_f = ta.ema(close, ema_fast)
+ema_s = ta.ema(close, ema_slow)
+ema_trend = ema_f > ema_s ? "BULL" : "BEAR"
+vwap_val = ta.vwap(hlc3)
+atr = ta.atr(14)
+
+// === PDH PDL GAP ===
+pdh = request.security(syminfo.tickerid, "D", high[1], gaps=barmerge.gaps_off)
+pdl = request.security(syminfo.tickerid, "D", low[1], gaps=barmerge.gaps_off)
+day_open = request.security(syminfo.tickerid, "D", open, gaps=barmerge.gaps_off)
+gap_up = day_open > pdh
+gap_pct = gap_up ? ((day_open - pdh) / pdh) * 100 : 0.0
+
+// === ORDER BLOCKS ===
+ob_bearish_top = float(na)
+ob_bearish_bottom = float(na)
+if show_ob
+    for i = 1 to ob_lookback
+        cb = close[i] - open[i]
+        cr = high[i] - low[i]
+        if cr > 0 and (cb / cr) < -0.6 and close[i-1] > high[i]
+            ob_bearish_top := high[i]
+            ob_bearish_bottom := low[i]
+            break
+
+ob_bullish_top = float(na)
+ob_bullish_bottom = float(na)
+if show_ob
+    for i = 1 to ob_lookback
+        cb = close[i] - open[i]
+        cr = high[i] - low[i]
+        if cr > 0 and (cb / cr) > 0.6 and close[i-1] < low[i]
+            ob_bullish_top := high[i]
+            ob_bullish_bottom := low[i]
+            break
+
+// === SESSION FILTER ===
+current_hour = hour(time, "America/New_York")
+in_session = use_time ? (current_hour >= sess_start and current_hour < sess_end) : true
+in_lunch = avoid_lunch ? (current_hour >= lunch_start and current_hour < lunch_end) : false
+can_trade = in_session and not in_lunch
+
+// === DAILY TRACKING ===
+var int trades_today = 0
+if ta.change(time("D")) != 0
+    trades_today := 0
+
+var float daily_pnl = 0.0
+if ta.change(time("D")) != 0
+    daily_pnl := 0.0
+
+equity = strategy.equity
+daily_pnl := equity - (nz(strategy.equity[1], strategy.initial_capital))
+loss_limit_hit = daily_pnl < -(equity * daily_loss / 100)
+
+system_ok = direction != "NONE" and can_trade and not loss_limit_hit and trades_today < max_trades
+
+// === SETUP 1: TENDENCIA LIMPIA ===
+s1_cond = false
+if setup_1 and system_ok and direction == "LONG"
+    trend_ok = ema_trend == "BULL"
+    near_ob = not na(ob_bullish_bottom) and (low <= ob_bullish_top * 1.005 and low >= ob_bullish_bottom)
+    near_vwap = math.abs(close - vwap_val) / close < 0.005
+    near_zone = near_ob or near_vwap
+    bullish_candle = close > open and (close - open) > (high - low) * 0.4
+    s1_cond := trend_ok and near_zone and bullish_candle
+
+// === SETUP 2: GAP AND GO ===
+s2_cond = false
+if setup_2 and system_ok and direction == "LONG"
+    gap_ok = gap_up and gap_pct >= 0.5
+    minutes_from_open = (current_hour - 9) * 60 + minute(time, "America/New_York")
+    in_first_hours = minutes_from_open <= 120 and minutes_from_open > 10
+    pullback_vwap = close[1] < vwap_val and close > vwap_val and close > open
+    near_vwap2 = math.abs(low - vwap_val) / close < 0.008
+    cont_candle = close > open and close > close[1]
+    s2_cond := gap_ok and in_first_hours and (pullback_vwap or (near_vwap2 and cont_candle))
+
+// === SETUP 3: VIX CRASH REVERSAL ===
+s3_cond = false
+prev_close = request.security(syminfo.tickerid, "D", close[1], gaps=barmerge.gaps_off)
+prev_open_d = request.security(syminfo.tickerid, "D", open[1], gaps=barmerge.gaps_off)
+prev_drop = prev_open_d > 0 ? ((prev_close - prev_open_d) / prev_open_d) * 100 : 0.0
+
+if setup_3 and system_ok and direction == "LONG"
+    vix_spike_ok = vix_spike
+    drop_ok = prev_drop < -2.0
+    vix_dropping = vix_close < vix_high_d * 0.98
+    bs = math.abs(close - open)
+    lw = math.min(open, close) - low
+    uw = high - math.max(open, close)
+    tr = high - low
+    is_hammer = tr > 0 and lw > bs * 2 and uw < bs * 0.5
+    is_engulfing = close > open and open < close[1] and close > open[1] and (close - open) > (open[1] - close[1])
+    rev_candle = is_hammer or is_engulfing
+    in_rev_hours = current_hour >= 10 and current_hour <= 12
+    s3_cond := vix_spike_ok and drop_ok and vix_dropping and rev_candle and in_rev_hours
+
+// === SETUP 4: SHORT EN MIEDO ===
+s4_cond = false
+if setup_4 and system_ok and direction == "SHORT"
+    vix_high_ok = vix_close > vix_long
+    bearish_trend = ema_trend == "BEAR"
+    near_resist = not na(ob_bearish_top) and (high >= ob_bearish_bottom * 0.995 and high <= ob_bearish_top * 1.005)
+    near_pdh_res = high >= pdh * 0.998 and high <= pdh * 1.002
+    at_resist = near_resist or near_pdh_res
+    bearish_candle = close < open and (open - close) > (high - low) * 0.4
+    rej_wick = (high - math.max(open, close)) > (math.abs(close - open)) * 1.5
+    s4_cond := vix_high_ok and bearish_trend and at_resist and (bearish_candle or rej_wick)
+
+// === SIGNALS ===
+long_signal = s1_cond or s2_cond or s3_cond
+short_signal = s4_cond
+
+// === EXECUTE ===
+var string active_setup = ""
+float sl = na
+float tp = na
+
+if long_signal and strategy.position_size == 0 and not loss_limit_hit
+    sl := close - atr * 1.5
+    tp := close + (close - sl) * rr_ratio
+    risk = close - sl
+    reward = tp - close
+    if reward / risk >= rr_ratio
+        strategy.entry("Long", strategy.long)
+        strategy.exit("Exit Long", "Long", stop=sl, limit=tp)
+        trades_today += 1
+        if s1_cond
+            active_setup := "TENDENCIA LIMPIA"
+        else if s2_cond
+            active_setup := "GAP AND GO"
+        else
+            active_setup := "VIX REVERSAL"
+
+if short_signal and strategy.position_size == 0 and not loss_limit_hit
+    sl := close + atr * 1.5
+    tp := close - (sl - close) * rr_ratio
+    risk = sl - close
+    reward = close - tp
+    if reward / risk >= rr_ratio
+        strategy.entry("Short", strategy.short)
+        strategy.exit("Exit Short", "Short", stop=sl, limit=tp)
+        trades_today += 1
+        active_setup := "SHORT EN MIEDO"
+
+// === PLOTS ===
+plot(ema_f, "EMA 9", color=color.new(color.orange, 20), linewidth=2)
+plot(ema_s, "EMA 20", color=color.new(color.purple, 20), linewidth=2)
+plot(use_vwap ? vwap_val : na, "VWAP", color=color.new(color.yellow, 30), linewidth=2, style=plot.style_circles)
+plot(show_pdh ? pdh : na, "PDH", color=color.new(color.gray, 40), linewidth=1, style=plot.style_stepline)
+plot(show_pdh ? pdl : na, "PDL", color=color.new(color.gray, 40), linewidth=1, style=plot.style_stepline)
+
+// === ORDER BLOCK PLOTS ===
+plot(show_ob and not na(ob_bullish_top) ? ob_bullish_top : na, "OB Demand Top", color=color.new(color.blue, 0), style=plot.style_linebr, linewidth=2)
+plot(show_ob and not na(ob_bullish_bottom) ? ob_bullish_bottom : na, "OB Demand Bot", color=color.new(color.blue, 0), style=plot.style_linebr, linewidth=1)
+bgcolor(show_ob and not na(ob_bullish_top) and not na(ob_bullish_bottom) ? color.new(color.blue, 90) : na)
+
+plot(show_ob and not na(ob_bearish_top) ? ob_bearish_top : na, "OB Supply Top", color=color.new(color.red, 60), style=plot.style_linebr, linewidth=2)
+plot(show_ob and not na(ob_bearish_bottom) ? ob_bearish_bottom : na, "OB Supply Bot", color=color.new(color.red, 60), style=plot.style_linebr, linewidth=1)
+bgcolor(show_ob and not na(ob_bearish_top) and not na(ob_bearish_bottom) ? color.new(color.red, 93) : na)
+
+// === SIGNAL SHAPES ===
+plotshape(long_signal and strategy.position_size == 0, title="LONG", text="LONG", location=location.belowbar, style=shape.labelup, size=size.normal, color=col_long, textcolor=color.white)
+plotshape(short_signal and strategy.position_size == 0, title="SHORT", text="SHORT", location=location.abovebar, style=shape.labeldown, size=size.normal, color=col_short, textcolor=color.white)
+
+// === SL TP PLOTS ===
+plot(strategy.position_size != 0 ? sl : na, "Stop Loss", color=col_sl, linewidth=2, style=plot.style_linebr)
+plot(strategy.position_size != 0 ? tp : na, "Take Profit", color=col_tp, linewidth=2, style=plot.style_linebr)
+
+// === BACKGROUND ===
+bgcolor(strategy.position_size > 0 ? color.new(color.teal, 93) : na, title="LONG BG")
+bgcolor(strategy.position_size < 0 ? color.new(color.red, 93) : na, title="SHORT BG")
+
+// === LABELS ===
+if long_signal and strategy.position_size == 0
+    label.new(bar_index, high, active_setup, style=label.style_label_up, color=col_long, textcolor=color.white)
+
+if short_signal and strategy.position_size == 0
+    label.new(bar_index, low, active_setup, style=label.style_label_down, color=col_short, textcolor=color.white)
+
+// === INFO TABLE ===
+var table info_panel = table.new(position.top_right, 2, 10, bgcolor=color.new(#1e222d, 10), border_color=color.new(color.gray, 60), border_width=1)
+if barstate.islast
+    table.cell(info_panel, 0, 0, "SCALPING SYSTEM", text_color=color.white, text_size=size.small, bgcolor=color.new(#2962ff, 0))
+    table.merge_cells(info_panel, 0, 0, 1, 0)
+    vc = vix_bullish ? color.teal : (vix_bearish ? color.orange : color.red)
+    table.cell(info_panel, 0, 1, "VIX", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 1, str.tostring(vix_close, "#.##"), text_color=vc, text_size=size.small)
+    table.cell(info_panel, 0, 2, "Signal", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 2, vix_bullish ? "LONG OK" : (vix_no_op ? "STOP!" : "SHORT OK"), text_color=vc, text_size=size.tiny)
+    table.cell(info_panel, 0, 3, "QQQ", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 3, qqq_bullish ? "BULL" : "BEAR", text_color=qqq_bullish ? color.teal : color.red, text_size=size.tiny)
+    table.cell(info_panel, 0, 4, "Dir", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 4, direction, text_color=direction == "LONG" ? color.teal : (direction == "SHORT" ? color.red : color.gray), text_size=size.small)
+    table.cell(info_panel, 0, 5, "Trend", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 5, ema_trend, text_color=ema_trend == "BULL" ? color.teal : color.red, text_size=size.tiny)
+    table.cell(info_panel, 0, 6, "Session", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 6, not in_session ? "CLOSED" : (in_lunch ? "LUNCH" : "OPEN"), text_color=in_session and not in_lunch ? color.teal : color.red, text_size=size.tiny)
+    table.cell(info_panel, 0, 7, "Trades", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 7, str.tostring(trades_today) + "/" + str.tostring(max_trades), text_color=trades_today >= max_trades ? color.red : color.white, text_size=size.tiny)
+    table.cell(info_panel, 0, 8, "P&L", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 8, str.tostring(daily_pnl, "#.##"), text_color=daily_pnl >= 0 ? color.teal : color.red, text_size=size.tiny)
+    table.cell(info_panel, 0, 9, "SYS", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_panel, 1, 9, system_ok ? "GO" : "STOP", text_color=system_ok ? color.teal : color.red, text_size=size.small)
+
+// === ALERTS ===
+alertcondition(long_signal and strategy.position_size == 0, title="LONG Signal", message="LONG SIGNAL on {{ticker}}")
+alertcondition(short_signal and strategy.position_size == 0, title="SHORT Signal", message="SHORT SIGNAL on {{ticker}}")
+alertcondition(vix_spike, title="VIX Spike", message="VIX SPIKE > 3 detected")
+alertcondition(loss_limit_hit, title="Daily Limit", message="Daily loss limit hit")

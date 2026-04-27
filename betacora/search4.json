@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://optioncharts.io/options/TSLA/max-pain",
+    "name": "TSLA: Tesla Inc Max Pain - Optioncharts.io",
+    "snippet": "The Max Pain for TSLA options expiring on Apr 24, 2026 (3 days) (w) is $375.00. Expiration Date| 2026-04-24(w). Missing: behavior squeeze pinning",
+    "host_name": "optioncharts.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/options/comments/1pr10j9/tsla_triple_witching_friday_the_500_call_wall_vs",
+    "name": "TSLA Triple Witching Friday: The $500 Call Wall vs. The $475",
+    "snippet": "By the afternoon, the story shifted from \"How high can we go?\" to \"Can we hold the floor?\" and that's where the $475 Gamma Pivot saved the day. SPY Predictions for 3/21 – $4.5 Trillion in Options Expiring - Reddit Tail Wagging The Dog: A case for how options hedging activity has ... More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://flashalpha.com/articles/call-wall-put-wall-gamma-flip-options-levels-explained",
+    "name": "Call Wall, Put Wall & Gamma Flip Explained: The Three GEX Levels",
+    "snippet": "GEX levels are strongest near options expiration because gamma peaks as time to expiration shrinks. A call wall driven by monthly options ...",
+    "host_name": "flashalpha.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.projectmanagertemplate.com/post/understanding-tesla-max-pain-what-traders-need-to-know",
+    "name": "Understanding Tesla Max Pain: What Traders Need to Know",
+    "snippet": "Weekly options (expiring every Friday) dominate Tesla's options chain, offering traders regular opportunities to analyze max pain behavior. Missing: OpEx | Show results with: OpEx",
+    "host_name": "www.projectmanagertemplate.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://podnews.net/podcast/iu4ow/episodes",
+    "name": "The OPEX Effect — podcast episodes - Podnews",
+    "snippet": "In this episode of The OpEx Effect, we dive deep into the fascinating market dynamics following the recent election and explore the remarkable surge in options ...",
+    "host_name": "podnews.net",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.barchart.com/stocks/quotes/TSLA/max-pain-chart",
+    "name": "TSLA Max Pain and Volatility Skew Charts for Tesla Stock",
+    "snippet": "Maximum pain theory suggests that upon expiration most options will expire worthless. The max pain price, which corresponds to the strike price with the highest ... Missing: OpEx behavior",
+    "host_name": "www.barchart.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.strike-watch.com/lab/max-pain-theory-options-expiration",
+    "name": "Max Pain Theory: How Market Makers Pin Options Strikes at Expiration",
+    "snippet": "As expiration approaches, gamma on ATM (at-the-money) options explodes, forcing dealers to rebalance enormous notional positions with each small ... Missing: TSLA | Show results with: TSLA",
+    "host_name": "www.strike-watch.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://marketchameleon.com/Overview/TSLA/OptionSummary",
+    "name": "TSLA Option Breakdown Tesla - Market Chameleon",
+    "snippet": "A breakdown of key statistics for each option expiration listed for TSLA. View implied volatility, volatility skew, volume, open interest, straddle premiums ... Missing: OpEx behavior gamma squeeze pain",
+    "host_name": "marketchameleon.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://optioncharts.io/options/TSLQ/max-pain",
+    "name": "Tradr 2X Short TSLA Daily ETF Max Pain - TSLQ - OptionCharts",
+    "snippet": "The Max Pain for TSLQ options expiring on Apr 17, 2026 (5 days) (m) is $19.00. Expiration Date| 2026-04-17(m). Missing: behavior squeeze pinning",
+    "host_name": "optioncharts.io",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://menthorq.com/guide/max-pain-theory-explained",
+    "name": "Max Pain Theory Explained Guide - MenthorQ",
+    "snippet": "What Does “Max Pain” Mean? Max Pain refers to the strike price at which the greatest number of options contracts (calls and puts) will expire worthless. Missing: TSLA squeeze",
+    "host_name": "menthorq.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

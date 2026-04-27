@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://tw.tradingview.com/scripts/tsla",
+    "name": "Tesla Motors (TSLA) — 指標和策略 - TradingView",
+    "snippet": "3. ATR (Average True Range): - The ATR is used to measure market volatility and is instrumental in setting the Stop Loss. - By multiplying the ATR value ... Missing: beta 2.5",
+    "host_name": "tw.tradingview.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://finance.yahoo.com/news/bollinger-bands-average-true-range-181502845.html",
+    "name": "How Bollinger Bands & Average True Range Confirmed a Tesla",
+    "snippet": "Check ATR for volatility context. For example, Tesla's ATR was about 14 points. Multiply by 1.5. That gave a breakout threshold of ~21 points. Missing: 2.5 standard deviation",
+    "host_name": "finance.yahoo.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.barchart.com/stocks/quotes/TSLA/technical-analysis",
+    "name": "TSLA Technical Analysis for Tesla Stock - Barchart.com",
+    "snippet": "Average True Range (ATR) is a moving average of trading ranges over a given period. High values often occur at market bottoms following a \"panic\" sell-off while ... Missing: 2.5 | Show results with: 2.5",
+    "host_name": "www.barchart.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://pocketoption.com/blog/en/interesting/reviews/best-stock-for-intraday",
+    "name": "Pocket Option: Mastering Best Stock for Intraday Selection Techniques",
+    "snippet": "ATR/Price ratio between 1-3%, Tesla (TSLA): 2.5% typical daily range ... The preferred method uses the Average True Range (ATR) as a ...",
+    "host_name": "pocketoption.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.vtmarkets.com/discover/most-volatile-stocks",
+    "name": "Most Volatile Stocks 2025: Ultimate Guide to High-Risk  - VT Markets",
+    "snippet": "To find volatile stocks using TradingView scanner, navigate to the Stock Screener, apply filters for Average True Range (ATR) above specific ...",
+    "host_name": "www.vtmarkets.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tw.tradingview.com/chart/TSLA/fON8dfc2-Day-Trader-s-Toolbox-Part-3-Average-True-Range-ATR",
+    "name": "Day Trader's Toolbox Part 3: Average True Range (ATR)",
+    "snippet": "Day Trader's Toolbox Part 3: Average True Range (ATR) · 1. Profit Targets · 2. Stop Placement · 3. Measuring Overextension Missing: beta deviation",
+    "host_name": "tw.tradingview.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://csimarket.com/stocks/TSLA-Technical-Analysis",
+    "name": "Tesla Inc (TSLA) Stock Technical Analysis & Charts - CSI Market",
+    "snippet": "The Average True Range (ATR) indicator measures price volatility in Tesla Inc stock by tracking the average range between daily highs and lows. Higher ATR ... Missing: beta 2.5",
+    "host_name": "csimarket.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://papers.ssrn.com/sol3/Delivery.cfm/485ac30f-daea-48f8-9c41-a229abe99478-MECA.pdf?abstractid=6401038&mirid=1",
+    "name": "[PDF] This preprint research paper has not been peer reviewed. Electronic",
+    "snippet": "Return standard deviation of 2.08% (33.1% annualized) indicates substantial volatility, though with considerable cross-sectional variation—TSLA ...",
+    "host_name": "papers.ssrn.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.investopedia.com/terms/a/atr.asp",
+    "name": "Average True Range (ATR) Formula, What It Means, and How to Use It",
+    "snippet": "The average true range is a market volatility indicator used in technical analysis. It shows investors the average price range for an investment over a ... Missing: Tesla TSLA 2.5 deviation",
+    "host_name": "www.investopedia.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tw.tradingview.com/scripts/tsla/?script_type=strategies",
+    "name": "Tesla Motors (TSLA) — 指標和策略 - TradingView",
+    "snippet": "ATR (Average True Range): - The ATR is used to measure market volatility and is instrumental in setting the Stop Loss. - By multiplying the ATR ... Missing: 2.5 standard deviation intraday",
+    "host_name": "tw.tradingview.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

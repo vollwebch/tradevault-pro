@@ -1,0 +1,64 @@
+[
+  {
+    "id": "01_intro",
+    "taskId": "202604200709095b75b39798cb440b",
+    "status": "PROCESSING",
+    "success": true,
+    "url": "https://aigc-files.bigmodel.cn/api/cogvideo/c5af82c6-3c44-11f1-93af-a2e1a54dd335_0.mp4",
+    "finalStatus": "SUCCESS"
+  },
+  {
+    "id": "02_mtfa",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  },
+  {
+    "id": "03_vix",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  },
+  {
+    "id": "04_qqq",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  },
+  {
+    "id": "05_setup1",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  },
+  {
+    "id": "06_setup2",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  },
+  {
+    "id": "07_setup3",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  },
+  {
+    "id": "08_setup4",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  },
+  {
+    "id": "09_risk",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  },
+  {
+    "id": "10_checklist",
+    "taskId": null,
+    "status": "CREATE_ERROR",
+    "error": "API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}"
+  }
+]
