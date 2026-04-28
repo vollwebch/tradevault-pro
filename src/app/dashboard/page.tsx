@@ -353,6 +353,7 @@ export default function Home(){
         if(!res.ok){setAuthError(d.error||'Email o contrasena incorrectos');return}
         const u={id:d.id,email:d.email,name:d.name,avatar:d.avatar,broker:d.broker,createdAt:new Date().toISOString()}
         setStore('tv_user',u);setStore('tv_token',d.token);setUser(u as User);setPage('dashboard');showToast('Bienvenido!')
+        fetch('/api/trades',{headers:{'Authorization':`Bearer ${d.token}`}}).then(r=>r.json()).then(d=>{if(d.trades){setAllTrades(d.trades);setStore(`tv_trades_${u.id}`,d.trades)}}).catch(()=>{})
       }else{
         if(!authName){setAuthError('Nombre requerido');return}
         const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:authEmail,password:authPassword,name:authName})})
