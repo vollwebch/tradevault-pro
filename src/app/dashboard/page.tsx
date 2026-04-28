@@ -254,7 +254,7 @@ export default function Home(){
   const [authError,setAuthError]=useState('')
   const [tradeOpen,setTradeOpen]=useState(false)
   const [editTrade,setEditTrade]=useState<Trade|null>(null)
-  const [tf,setTf]=useState({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG' as const,entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',brokerFees:'',profitSplit:'100',setup:'',notes:'',emotion:5,tags:'',screenshot:''})
+  const [tf,setTf]=useState({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG' as const,entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',brokerFees:'',profitSplit:'100',isFunded:false,setup:'',notes:'',emotion:5,tags:'',screenshot:''})
   const [fSymbol,setFSymbol]=useState('');const [fDir,setFDir]=useState('');const [fSetup,setFSetup]=useState('');const [fFrom,setFFrom]=useState('');const [fTo,setFTo]=useState('')
   const [period,setPeriod]=useState('30')
   const [profName,setProfName]=useState('');const [profAvatar,setProfAvatar]=useState('#e31937');const [profBroker,setProfBroker]=useState('')
@@ -341,8 +341,8 @@ export default function Home(){
   const stats=useMemo(()=>calcStats(allTrades,period),[allTrades,period])
 
   const openTrade=(t?:Trade)=>{
-    if(t){setEditTrade(t);setTf({date:t.date.slice(0,16),symbol:t.symbol,direction:t.direction as 'LONG',entryPrice:String(t.entryPrice),exitPrice:String(t.exitPrice),stopLoss:t.stopLoss?String(t.stopLoss):'',takeProfit:t.takeProfit?String(t.takeProfit):'',shares:String(t.shares),commission:t.commission?String(t.commission):'',brokerFees:t.brokerFees?String(t.brokerFees):'',profitSplit:t.profitSplit?String(t.profitSplit):'100',setup:t.setup||'VWAP Bounce',notes:t.notes||'',emotion:t.emotion||5,tags:t.tags||'',screenshot:t.screenshot||''})}
-    else{setEditTrade(null);setTf({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG',entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',brokerFees:'',profitSplit:'100',setup:'',notes:'',emotion:5,tags:'',screenshot:''})}
+    if(t){setEditTrade(t);setTf({date:t.date.slice(0,16),symbol:t.symbol,direction:t.direction as 'LONG',entryPrice:String(t.entryPrice),exitPrice:String(t.exitPrice),stopLoss:t.stopLoss?String(t.stopLoss):'',takeProfit:t.takeProfit?String(t.takeProfit):'',shares:String(t.shares),commission:t.commission?String(t.commission):'',brokerFees:t.brokerFees?String(t.brokerFees):'',profitSplit:t.profitSplit?String(t.profitSplit):'100',isFunded:(t.profitSplit||100)<100||!!t.brokerFees,setup:t.setup||'VWAP Bounce',notes:t.notes||'',emotion:t.emotion||5,tags:t.tags||'',screenshot:t.screenshot||''})}
+    else{setEditTrade(null);setTf({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG',entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',brokerFees:'',profitSplit:'100',isFunded:false,setup:'',notes:'',emotion:5,tags:'',screenshot:''})}
     setTradeOpen(true)
   }
 
@@ -908,14 +908,20 @@ export default function Home(){
               {/* Liquidacion Final */}
               {(()=>{
                 const ep=parseFloat(tf.entryPrice)||0,xp=parseFloat(tf.exitPrice)||0,sh=parseFloat(tf.shares)||0
-                const comm=parseFloat(tf.commission)||0,bf=parseFloat(tf.brokerFees)||0,ps=parseInt(tf.profitSplit)||100
+                const comm=parseFloat(tf.commission)||0,bf=tf.isFunded?(parseFloat(tf.brokerFees)||0):0,ps=tf.isFunded?(parseInt(tf.profitSplit)||100):100
                 const rawPnl=tf.direction==='LONG'?(xp-ep)*sh:(ep-xp)*sh
                 const grossPnl=rawPnl-comm
                 const netReal=Math.round((grossPnl-bf)*(ps/100)*100)/100
                 const hasValues=ep>0&&xp>0&&sh>0
                 return(
               <div className="space-y-2 p-3 bg-zinc-900/50 border border-[#333] rounded-lg mt-2">
-                <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Liquidacion Final</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Liquidacion Final</p>
+                  <button onClick={()=>setTf(p=>({...p,isFunded:!p.isFunded}))} className={`relative w-9 h-5 rounded-full transition-colors ${tf.isFunded?'bg-[#e31937]':'bg-[#333]'}`}>
+                    <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${tf.isFunded?'translate-x-4':''}`}/>
+                  </button>
+                </div>
+                <p className="text-[10px] text-zinc-500 -mt-1">{tf.isFunded?'Cuenta de Fondeo activada':'Cuenta personal'}</p>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-zinc-400">Bruto P&L:</span>
                   <span className="text-white font-medium">{hasValues?fmt$(rawPnl):'$0.00'}</span>
@@ -924,6 +930,7 @@ export default function Home(){
                   <span className="text-zinc-400">- Comision:</span>
                   <span className="text-[#e31937]">{comm>0?`-$${comm.toFixed(2)}`:'$0.00'}</span>
                 </div>
+                {tf.isFunded&&<>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-zinc-400">Spread/Broker:</span>
                   <input type="number" step="any" placeholder="0.00" value={tf.brokerFees} onChange={e=>{const val=e.target.value.replace(",",".");setTf(p=>({...p,brokerFees:val}))}} className="w-20 bg-[#1a1a1a] border border-[#444] rounded px-2 py-0.5 text-right text-white outline-none focus:border-[#e31937] text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
@@ -938,12 +945,13 @@ export default function Home(){
                     <option value="75">75% (Fondeado)</option>
                   </select>
                 </div>
+                </>}
                 <hr className="border-[#333] my-1"/>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-white">Ganancia Neta Real:</span>
+                  <span className="text-sm font-bold text-white">{tf.isFunded?'Ganancia Neta Real:':'P&L Neto:'}</span>
                   <span className={`text-lg font-bold ${hasValues?(netReal>=0?'text-[#00c853]':'text-[#e31937]'):'text-zinc-600'}`}>{hasValues?fmt$(netReal):'$0.00'}</span>
                 </div>
-                {ps<100&&hasValues&&grossPnl>0&&<p className="text-[10px] text-zinc-500 italic text-right">{fmt$(grossPnl-bf)} x {ps}% = {fmt$(netReal)}</p>}
+                {tf.isFunded&&ps<100&&hasValues&&grossPnl>0&&<p className="text-[10px] text-zinc-500 italic text-right">{fmt$(grossPnl-bf)} x {ps}% = {fmt$(netReal)}</p>}
               </div>
                 )
               })()}
