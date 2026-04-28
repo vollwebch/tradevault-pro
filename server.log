@@ -4,3 +4,10 @@
 
 ✓ Starting...
 ✓ Ready in 548ms
+Create trade error: SqliteError: FOREIGN KEY constraint failed
+    at C (.next/server/chunks/[root-of-the-server]__76bbe5c6._.js:4:8)
+    at async d (.next/server/chunks/[root-of-the-server]__76bbe5c6._.js:4:3412)
+    at async l (.next/server/chunks/[root-of-the-server]__76bbe5c6._.js:4:4453)
+    at async Module.k (.next/server/chunks/[root-of-the-server]__76bbe5c6._.js:4:5531) {
+  code: 'SQLITE_CONSTRAINT_FOREIGNKEY'
+}
