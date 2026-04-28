@@ -34,7 +34,7 @@ function fmtDateShort(d:string){return new Date(d).toLocaleDateString('es-US',{m
 const COLORS=['#00c853','#e31937','#00d4ff','#a855f7','#f59e0b','#ff6b00','#14b8a6','#ef4444']
 
 /* ─── IMAGE COMPRESSOR ─── */
-function compressImage(file:File,maxW=800,maxH=800,quality=0.7):Promise<string>{
+function compressImage(file:File,maxW=800,maxH=800,quality=0.8):Promise<string>{
   return new Promise((resolve)=>{
     const img=new Image()
     img.onload=()=>{
