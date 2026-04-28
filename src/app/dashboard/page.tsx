@@ -821,26 +821,56 @@ export default function Home(){
         </div>
 
         {/* Trade Dialog */}
-        <Dialog open={tradeOpen} onOpenChange={setTradeOpen}><DialogContent className="bg-[#111] border-[#222] max-w-lg max-h-[85vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{editTrade?'Editar Trade':'Nuevo Trade'}</DialogTitle></DialogHeader>
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div><Label className="text-xs text-zinc-400">Fecha</Label><Input type="datetime-local" value={tf.date} onChange={e=>setTf(p=>({...p,date:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-              <div><Label className="text-xs text-zinc-400">Symbol</Label><Input list="symbols-list" value={tf.symbol} onChange={e=>setTf(p=>({...p,symbol:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1" placeholder="Escribe o elige..."/><datalist id="symbols-list">{DEFAULT_SYMBOLS.map(s=><option key={s} value={s}/>)}</datalist></div>
-              <div><Label className="text-xs text-zinc-400">Direccion</Label><Select value={tf.direction} onValueChange={v=>setTf(p=>({...p,direction:v}))}><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="LONG">LONG</SelectItem><SelectItem value="SHORT">SHORT</SelectItem></SelectContent></Select></div>
-              <div><Label className="text-xs text-zinc-400">Setup</Label><Input list="setups-list" value={tf.setup} onChange={e=>setTf(p=>({...p,setup:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1" placeholder="Escribe o elige..."/><datalist id="setups-list">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist></div>
-              <div><Label className="text-xs text-zinc-400">Entry Price</Label><Input value={tf.entryPrice} onChange={e=>setTf(p=>({...p,entryPrice:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-              <div><Label className="text-xs text-zinc-400">Exit Price</Label><Input value={tf.exitPrice} onChange={e=>setTf(p=>({...p,exitPrice:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-              <div><Label className="text-xs text-zinc-400">Stop Loss</Label><Input value={tf.stopLoss} onChange={e=>setTf(p=>({...p,stopLoss:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-              <div><Label className="text-xs text-zinc-400">Take Profit</Label><Input value={tf.takeProfit} onChange={e=>setTf(p=>({...p,takeProfit:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-              <div><Label className="text-xs text-zinc-400">Shares</Label><Input value={tf.shares} onChange={e=>setTf(p=>({...p,shares:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-              <div className="col-span-2"><label className="flex items-center gap-2 font-medium text-zinc-300 text-xs mb-2">Emocion</label><div className="flex items-center gap-3"><span className="text-sm grayscale hover:grayscale-0 transition-all cursor-default">😰</span><div className="relative flex-1 flex items-center"><input type="range" min="1" max="10" value={tf.emotion} onChange={e=>setTf(p=>({...p,emotion:Number(e.target.value)}))} className="w-full h-1.5 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#e31937] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-[#e31937]/50 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#e31937] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer" style={{background:`linear-gradient(to right, #e31937 ${(tf.emotion-1)*11.1}%, #27272a 0%)`}}/></div><span className="text-sm">🔥</span><span className="text-sm font-bold w-6 text-center text-white">{tf.emotion}</span></div><p className="text-[10px] text-zinc-500 mt-2 italic text-center">{tf.emotion>7?"Cuidado con el exceso de confianza (Greed)":tf.emotion<4?"Posible miedo o inseguridad":"Estado equilibrado"}</p></div>
+        {tradeOpen&&<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={()=>setTradeOpen(false)}>
+          <div className="relative w-full max-w-lg bg-[#111] border border-[#222] rounded-lg shadow-xl max-h-[90vh] overflow-y-auto" onClick={e=>e.stopPropagation()}>
+            {/* Header */}
+            <div className="p-6 pb-0 flex justify-between items-start">
+              <h2 className="text-lg font-semibold text-white">{editTrade?'Editar Trade':'Nuevo Trade'}</h2>
+              <button onClick={()=>setTradeOpen(false)} className="text-zinc-500 hover:text-white transition-colors"><X size={20}/></button>
             </div>
-            <div><Label className="text-xs text-zinc-400">Notas</Label><Textarea value={tf.notes} onChange={e=>setTf(p=>({...p,notes:e.target.value}))} placeholder="Que paso?" rows={2} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-            <div><Label className="text-xs text-zinc-400">Tags</Label><Input value={tf.tags} onChange={e=>setTf(p=>({...p,tags:e.target.value}))} placeholder="gap, vwap, momentum" className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-            <div className="flex gap-2 pt-2"><Button onClick={saveTrade} className="flex-1 bg-[#e31937] hover:bg-[#c41530] text-white">{editTrade?'Actualizar':'Guardar'}</Button><Button variant="outline" className="border-[#333] text-zinc-300" onClick={()=>setTradeOpen(false)}>Cancelar</Button></div>
+
+            <div className="p-6 space-y-4">
+              {/* Fecha y Simbolo */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Fecha y Hora</label><input type="datetime-local" value={tf.date} onChange={e=>setTf(p=>({...p,date:e.target.value}))} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white focus:border-[#e31937] outline-none transition-colors"/></div>
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Simbolo</label><Input list="symbols-list" value={tf.symbol} onChange={e=>setTf(p=>({...p,symbol:e.target.value}))} className="bg-[#1a1a1a] border-[#333] h-9 text-sm text-white focus:border-[#e31937] outline-none transition-colors" placeholder="Escribe o elige..."/><datalist id="symbols-list">{DEFAULT_SYMBOLS.map(s=><option key={s} value={s}/>)}</datalist></div>
+              </div>
+
+              {/* Direccion LONG/SHORT */}
+              <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Direccion</label><div className="flex gap-2 mt-1"><button onClick={()=>setTf(p=>({...p,direction:'LONG'}))} className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-all ${tf.direction==='LONG'?'bg-[#00c853]/15 border-[#00c853]/50 text-[#00c853]':'border-[#333] text-zinc-400 hover:border-[#444]'}`}>LONG</button><button onClick={()=>setTf(p=>({...p,direction:'SHORT'}))} className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-all ${tf.direction==='SHORT'?'bg-[#e31937]/15 border-[#e31937]/50 text-[#e31937]':'border-[#333] text-zinc-400 hover:border-[#444]'}`}>SHORT</button></div></div>
+
+              {/* Precios */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Precio Entrada</label><input type="number" value={tf.entryPrice} onChange={e=>setTf(p=>({...p,entryPrice:e.target.value}))} placeholder="0.00" className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Precio Salida</label><input type="number" value={tf.exitPrice} onChange={e=>setTf(p=>({...p,exitPrice:e.target.value}))} placeholder="0.00" className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Stop Loss</label><input type="number" value={tf.stopLoss} onChange={e=>setTf(p=>({...p,stopLoss:e.target.value}))} placeholder="Opcional" className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Take Profit</label><input type="number" value={tf.takeProfit} onChange={e=>setTf(p=>({...p,takeProfit:e.target.value}))} placeholder="Opcional" className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
+              </div>
+
+              {/* Shares y Setup */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Shares</label><input type="number" value={tf.shares} onChange={e=>setTf(p=>({...p,shares:e.target.value}))} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Setup</label><Input list="setups-list" value={tf.setup} onChange={e=>setTf(p=>({...p,setup:e.target.value}))} className="bg-[#1a1a1a] border-[#333] h-9 text-sm text-white focus:border-[#e31937] outline-none transition-colors" placeholder="Escribe o elige..."/><datalist id="setups-list">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist></div>
+              </div>
+
+              {/* Emocion Slider */}
+              <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Emocion (1-10)</label><div className="flex items-center gap-3 mt-2"><span className="text-sm grayscale hover:grayscale-0 transition-all cursor-default">😰</span><div className="relative flex-1 flex items-center"><input type="range" min="1" max="10" value={tf.emotion} onChange={e=>setTf(p=>({...p,emotion:Number(e.target.value)}))} className="w-full h-1.5 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#e31937] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-[#e31937]/50 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#e31937] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer" style={{background:`linear-gradient(to right, #e31937 ${(tf.emotion-1)*11.1}%, #27272a 0%)`}}/></div><span className="text-sm">🔥</span><span className="text-sm font-medium w-6 text-center text-white">{tf.emotion}</span></div><p className="text-[10px] text-zinc-500 mt-2 italic text-center">{tf.emotion>7?"Cuidado con el exceso de confianza (Greed)":tf.emotion<4?"Posible miedo o inseguridad":"Estado equilibrado"}</p></div>
+
+              {/* Notas y Tags */}
+              <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Notas</label><textarea value={tf.notes} onChange={e=>setTf(p=>({...p,notes:e.target.value}))} placeholder="Que paso en este trade?" rows={3} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md p-3 text-sm text-white resize-none outline-none focus:border-[#e31937] transition-colors"/></div>
+              <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Tags (separados por coma)</label><input value={tf.tags} onChange={e=>setTf(p=>({...p,tags:e.target.value}))} placeholder="ej: gap, vwap, momentum" className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
+
+              {/* Upload Imagen */}
+              <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Captura de Pantalla</label><label className="flex items-center justify-center gap-2 px-3 py-3 rounded-lg border border-dashed border-[#333] hover:border-[#555] cursor-pointer transition-colors group"><Upload size={16} className="text-zinc-400 group-hover:text-white"/><span className="text-sm text-zinc-400 group-hover:text-white">Subir imagen</span><input type="file" accept="image/*" className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f){const r=new FileReader();r.onload=()=>setTf(p=>({...p,screenshot:r.result as string}));r.readAsDataURL(f)}}}/></label></div>
+
+              {/* Footer Buttons */}
+              <div className="flex gap-2 pt-4">
+                <button onClick={saveTrade} className="flex-1 bg-[#e31937] hover:bg-[#c41530] text-white font-medium py-2.5 rounded-md transition-colors">{editTrade?'Actualizar Trade':'Guardar Trade'}</button>
+                <button onClick={()=>setTradeOpen(false)} className="flex-1 bg-transparent border border-[#333] text-zinc-300 hover:bg-[#1a1a1a] font-medium py-2.5 rounded-md transition-colors">Cancelar</button>
+              </div>
+            </div>
           </div>
-        </DialogContent></Dialog>
+        </div>}
 
         {(page==='dashboard'||page==='journal'||page==='goals')&&<button onClick={()=>openTrade()} className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#e31937] hover:bg-[#c41530] shadow-lg shadow-[#e31937]/30 flex items-center justify-center lg:hidden z-50"><Plus size={24} className="text-white"/></button>}
       </main>
