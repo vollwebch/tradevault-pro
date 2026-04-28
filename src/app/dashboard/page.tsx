@@ -318,7 +318,7 @@ export default function Home(){
     if(isNaN(ep)||isNaN(xp)||isNaN(sh))return
     const token=getStore<string>('tv_token','')
     const headers={'Content-Type':'application/json','Authorization':token?`Bearer ${token}`:''}
-    const payload={date:tf.date,symbol:tf.symbol,direction:tf.direction,entryPrice:ep,exitPrice:xp,stopLoss:tf.stopLoss?parseFloat(tf.stopLoss):null,takeProfit:tf.takeProfit?parseFloat(tf.takeProfit):null,shares:sh,setup:tf.setup,notes:tf.notes,emotion:tf.emotion,tags:tf.tags,screenshot:tf.screenshot}
+    const payload={date:tf.date,symbol:tf.symbol,direction:tf.direction,entryPrice:ep,exitPrice:xp,stopLoss:tf.stopLoss?parseFloat(tf.stopLoss):null,takeProfit:tf.takeProfit?parseFloat(tf.takeProfit):null,shares:sh,setup:tf.setup,notes:tf.notes,emotion:tf.emotion,tags:tf.tags,screenshot:tf.screenshot||null}
     try{
       if(editTrade&&editTrade._dbId){
         const res=await fetch(`/api/trades/${editTrade._dbId}`,{method:'PUT',headers,body:JSON.stringify(payload)})
