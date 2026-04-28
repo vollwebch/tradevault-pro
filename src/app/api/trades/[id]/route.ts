@@ -22,6 +22,9 @@ function mapTrade(row: Record<string, unknown>) {
     takeProfit: row.take_profit,
     shares: row.shares,
     commission: row.commission,
+    brokerFees: row.broker_fees,
+    profitSplit: row.profit_split,
+    realPnl: row.real_pnl,
     setup: row.setup,
     notes: row.notes,
     emotion: row.emotion,
@@ -86,7 +89,8 @@ export async function PUT(
 
     db.prepare(`
       UPDATE trades SET date = ?, symbol = ?, direction = ?, entry_price = ?, exit_price = ?,
-        stop_loss = ?, take_profit = ?, shares = ?, commission = ?, setup = ?, notes = ?, emotion = ?, screenshot = ?, tags = ?
+        stop_loss = ?, take_profit = ?, shares = ?, commission = ?, broker_fees = ?, profit_split = ?, real_pnl = ?,
+        setup = ?, notes = ?, emotion = ?, screenshot = ?, tags = ?
       WHERE id = ? AND user_id = ?
     `).run(
       body.date,
@@ -98,6 +102,9 @@ export async function PUT(
       body.takeProfit ?? null,
       body.shares,
       body.commission ?? null,
+      body.brokerFees ?? null,
+      body.profitSplit ?? 100,
+      body.realPnl ?? 0,
       body.setup || null,
       body.notes || null,
       body.emotion ?? null,

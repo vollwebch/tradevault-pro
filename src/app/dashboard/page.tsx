@@ -18,7 +18,7 @@ import { LayoutDashboard, BookOpen, BarChart3, GraduationCap, User, LogIn, Plus,
 
 /* ─── TYPES ─── */
 interface User { id:string;email:string;name:string;avatar:string|null;broker:string|null;createdAt:string;password?:string }
-interface Trade { id:number;userId:string;date:string;symbol:string;direction:string;entryPrice:number;exitPrice:number;stopLoss:number|null;takeProfit:number|null;shares:number;commission:number|null;setup:string|null;notes:string|null;emotion:number|null;screenshot:string|null;tags:string|null;createdAt:string;_dbId?:string }
+interface Trade { id:number;userId:string;date:string;symbol:string;direction:string;entryPrice:number;exitPrice:number;stopLoss:number|null;takeProfit:number|null;shares:number;commission:number|null;brokerFees:number|null;profitSplit:number|null;realPnl:number|null;setup:string|null;notes:string|null;emotion:number|null;screenshot:string|null;tags:string|null;createdAt:string;_dbId?:string }
 const DEFAULT_SETUPS=['VWAP Bounce','Bollinger Squeeze','EMA Cross','Gap Fill','Reversal','Otro']
 const DEFAULT_SYMBOLS=['TSLA','SPY','AAPL','NVDA','AMZN','META','GOOGL','MSFT','AMD','QQQ']
 
@@ -28,6 +28,7 @@ function setStore<T>(k:string,v:T){if(typeof window!=='undefined')localStorage.s
 
 /* ─── HELPERS ─── */
 function calcPnL(t:Trade){const raw=t.direction==='LONG'?(t.exitPrice-t.entryPrice)*t.shares:(t.entryPrice-t.exitPrice)*t.shares;const comm=t.commission||0;return raw-comm}
+function calcRealPnL(t:Trade){if(t.realPnl!=null)return t.realPnl;return calcPnL(t)}
 function fmt$(n:number){return `$${n>=0?'+':''}${n.toFixed(2)}`}
 function fmtDate(d:string){return new Date(d).toLocaleDateString('es-US',{month:'short',day:'numeric',year:'numeric'})}
 function fmtDateShort(d:string){return new Date(d).toLocaleDateString('es-US',{month:'short',day:'numeric'})}
@@ -61,7 +62,7 @@ function calcStats(trades:Trade[],period?:string){
   if(period&&period!=='all'){const d=parseInt(period);const c=new Date();c.setDate(c.getDate()-d);c.setHours(0,0,0,0);t=t.filter(x=>new Date(x.date)>=c)}
   t.sort((a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime())
   if(!t.length)return{totalTrades:0,winRate:0,totalPnL:0,avgPnL:0,profitFactor:0,avgWin:0,avgLoss:0,largestWin:0,largestLoss:0,bestDay:0,worstDay:0,currentStreak:0,streakType:'win',maxDrawdown:0,pnlByDay:[],pnlBySetup:[],pnlByHour:[],pnlByDayOfWeek:[],winRateBySetup:[],setupDistribution:[],equityCurve:[]}
-  const pnls=t.map(calcPnL),wins=pnls.filter(p=>p>0),losses=pnls.filter(p=>p<0)
+  const pnls=t.map(calcRealPnL),wins=pnls.filter(p=>p>0),losses=pnls.filter(p=>p<0)
   const w=Math.round(wins.length/t.length*100),tp=pnls.reduce((a,b)=>a+b,0),aw=wins.length?wins.reduce((a,b)=>a+b,0)/wins.length:0
   const al=losses.length?losses.reduce((a,b)=>a+b,0)/losses.length:0
   const gw=wins.reduce((a,b)=>a+b,0),gl=Math.abs(losses.reduce((a,b)=>a+b,0))
@@ -73,7 +74,7 @@ function calcStats(trades:Trade[],period?:string){
   const pbs=Array.from(sm.entries()).map(([setup,d])=>({setup,pnl:Math.round(d.p*100)/100,winRate:Math.round(d.w/d.c*100),count:d.c}))
   let cs=0,st='win';for(let i=pnls.length-1;i>=0;i--){const w2=pnls[i]>0;if(i===pnls.length-1){st=w2?'win':'loss';cs=1}else if((st==='win'&&w2)||(st==='loss'&&!w2))cs++;else break}
   let peak=0,mdd=0,cum=0;pnls.forEach(p=>{cum+=p;if(cum>peak)peak=cum;const dd=peak-cum;if(dd>mdd)mdd=dd})
-  let eq=0;const ec=t.map(tr=>{eq+=calcPnL(tr);return{date:fmtDateShort(tr.date),equity:Math.round(eq*100)/100}})
+  let eq=0;const ec=t.map(tr=>{eq+=calcRealPnL(tr);return{date:fmtDateShort(tr.date),equity:Math.round(eq*100)/100}})
   const hm=new Map<number,number>();t.forEach((tr,i)=>{const h=new Date(tr.date).getHours();hm.set(h,(hm.get(h)||0)+pnls[i])})
   const pbh=Array.from(hm.entries()).map(([hour,pnl])=>({hour,pnl:Math.round(pnl*100)/100})).sort((a,b)=>a.hour-b.hour)
   const dn=['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];const dwm=new Map<number,number>();t.forEach((tr,i)=>{const d=new Date(tr.date).getDay();dwm.set(d,(dwm.get(d)||0)+pnls[i])})
@@ -253,7 +254,7 @@ export default function Home(){
   const [authError,setAuthError]=useState('')
   const [tradeOpen,setTradeOpen]=useState(false)
   const [editTrade,setEditTrade]=useState<Trade|null>(null)
-  const [tf,setTf]=useState({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG' as const,entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',setup:'',notes:'',emotion:5,tags:'',screenshot:''})
+  const [tf,setTf]=useState({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG' as const,entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',brokerFees:'',profitSplit:'100',setup:'',notes:'',emotion:5,tags:'',screenshot:''})
   const [fSymbol,setFSymbol]=useState('');const [fDir,setFDir]=useState('');const [fSetup,setFSetup]=useState('');const [fFrom,setFFrom]=useState('');const [fTo,setFTo]=useState('')
   const [period,setPeriod]=useState('30')
   const [profName,setProfName]=useState('');const [profAvatar,setProfAvatar]=useState('#e31937');const [profBroker,setProfBroker]=useState('')
@@ -340,8 +341,8 @@ export default function Home(){
   const stats=useMemo(()=>calcStats(allTrades,period),[allTrades,period])
 
   const openTrade=(t?:Trade)=>{
-    if(t){setEditTrade(t);setTf({date:t.date.slice(0,16),symbol:t.symbol,direction:t.direction as 'LONG',entryPrice:String(t.entryPrice),exitPrice:String(t.exitPrice),stopLoss:t.stopLoss?String(t.stopLoss):'',takeProfit:t.takeProfit?String(t.takeProfit):'',shares:String(t.shares),commission:t.commission?String(t.commission):'',setup:t.setup||'VWAP Bounce',notes:t.notes||'',emotion:t.emotion||5,tags:t.tags||'',screenshot:t.screenshot||''})}
-    else{setEditTrade(null);setTf({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG',entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',setup:'',notes:'',emotion:5,tags:'',screenshot:''})}
+    if(t){setEditTrade(t);setTf({date:t.date.slice(0,16),symbol:t.symbol,direction:t.direction as 'LONG',entryPrice:String(t.entryPrice),exitPrice:String(t.exitPrice),stopLoss:t.stopLoss?String(t.stopLoss):'',takeProfit:t.takeProfit?String(t.takeProfit):'',shares:String(t.shares),commission:t.commission?String(t.commission):'',brokerFees:t.brokerFees?String(t.brokerFees):'',profitSplit:t.profitSplit?String(t.profitSplit):'100',setup:t.setup||'VWAP Bounce',notes:t.notes||'',emotion:t.emotion||5,tags:t.tags||'',screenshot:t.screenshot||''})}
+    else{setEditTrade(null);setTf({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG',entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',brokerFees:'',profitSplit:'100',setup:'',notes:'',emotion:5,tags:'',screenshot:''})}
     setTradeOpen(true)
   }
 
@@ -349,10 +350,16 @@ export default function Home(){
     if(!tf.date||!tf.entryPrice||!tf.exitPrice||!tf.shares){showToast('Completa los campos requeridos');return}
     const ep=parseFloat(tf.entryPrice),xp=parseFloat(tf.exitPrice),sh=parseFloat(tf.shares)
     if(isNaN(ep)||isNaN(xp)||isNaN(sh)){showToast('Valores numericos invalidos');return}
+    const comm=tf.commission?parseFloat(tf.commission):0
+    const rawPnl=tf.direction==='LONG'?(xp-ep)*sh:(ep-xp)*sh
+    const grossPnl=rawPnl-comm
+    const bf=tf.brokerFees?parseFloat(tf.brokerFees):0
+    const ps=tf.profitSplit?parseInt(tf.profitSplit):100
+    const realPnl=Math.round((grossPnl-bf)*(ps/100)*100)/100
     const token=getStore<string>('tv_token','')
     if(!token){showToast('Token no encontrado, vuelve a iniciar sesion');return}
     const headers={'Content-Type':'application/json','Authorization':`Bearer ${token}`}
-    const payload={date:tf.date,symbol:tf.symbol,direction:tf.direction,entryPrice:ep,exitPrice:xp,stopLoss:tf.stopLoss?parseFloat(tf.stopLoss):null,takeProfit:tf.takeProfit?parseFloat(tf.takeProfit):null,shares:sh,commission:tf.commission?parseFloat(tf.commission):null,setup:tf.setup,notes:tf.notes,emotion:tf.emotion,tags:tf.tags,screenshot:tf.screenshot||null}
+    const payload={date:tf.date,symbol:tf.symbol,direction:tf.direction,entryPrice:ep,exitPrice:xp,stopLoss:tf.stopLoss?parseFloat(tf.stopLoss):null,takeProfit:tf.takeProfit?parseFloat(tf.takeProfit):null,shares:sh,commission:comm||null,brokerFees:bf||null,profitSplit:ps,realPnl,setup:tf.setup,notes:tf.notes,emotion:tf.emotion,tags:tf.tags,screenshot:tf.screenshot||null}
     try{
       if(editTrade&&editTrade._dbId){
         const res=await fetch(`/api/trades/${editTrade._dbId}`,{method:'PUT',headers,body:JSON.stringify(payload)})
@@ -443,7 +450,7 @@ export default function Home(){
   const heatData=useMemo(()=>{
     const grid=Array(13).fill(null).map(()=>Array(13).fill(null)) // 13 hours (6-18) x 7 days
     const counts=Array(13).fill(null).map(()=>Array(13).fill(0))
-    allTrades.forEach(t=>{const h=new Date(t.date).getHours()-6;const d=new Date(t.date).getDay();if(h>=0&&h<13&&d>=1&&d<=6){const p=calcPnL(t);grid[d-1][h]=(grid[d-1][h]||0)+p;counts[d-1][h]++}})
+    allTrades.forEach(t=>{const h=new Date(t.date).getHours()-6;const d=new Date(t.date).getDay();if(h>=0&&h<13&&d>=1&&d<=6){const p=calcRealPnL(t);grid[d-1][h]=(grid[d-1][h]||0)+p;counts[d-1][h]++}})
     return heatView==='pnl'?grid:counts
   },[allTrades,heatView])
 
@@ -486,7 +493,7 @@ export default function Home(){
     </div>
   )
 
-  const tradingPnL=allTrades.reduce((a,t)=>a+calcPnL(t),0)
+  const tradingPnL=allTrades.reduce((a,t)=>a+calcRealPnL(t),0)
   const totalBal=initCapital+txs.filter(t=>t.type==='deposit').reduce((a,t)=>a+t.amount,0)-txs.filter(t=>t.type==='withdrawal').reduce((a,t)=>a+t.amount,0)+tradingPnL
   const roi=initCapital>0?Math.round(((totalBal-initCapital)/initCapital)*10000)/100:0
 
@@ -530,7 +537,7 @@ export default function Home(){
                   <Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">Curva de Equity</CardTitle></CardHeader><CardContent><ResponsiveContainer width="100%" height={200}><AreaChart data={stats.equityCurve}><CartesianGrid strokeDasharray="3 3" stroke="#222"/><XAxis dataKey="date" tick={{fontSize:10}} stroke="#555"/><YAxis tick={{fontSize:10}} stroke="#555"/><Tooltip contentStyle={{background:'#1a1a1a',border:'1px solid #333',borderRadius:8}}/><Area type="monotone" dataKey="equity" stroke="#00c853" fill="#00c853" fillOpacity={0.1}/></AreaChart></ResponsiveContainer></CardContent></Card>
                   <Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">P&L por Dia</CardTitle></CardHeader><CardContent><ResponsiveContainer width="100%" height={200}><BarChart data={stats.pnlByDay}><CartesianGrid strokeDasharray="3 3" stroke="#222"/><XAxis dataKey="date" tick={{fontSize:10}} stroke="#555"/><YAxis tick={{fontSize:10}} stroke="#555"/><Tooltip contentStyle={{background:'#1a1a1a',border:'1px solid #333',borderRadius:8}}/><Bar dataKey="pnl" fill="#00c853" radius={[4,4,0,0]}/></BarChart></ResponsiveContainer></CardContent></Card>
                 </div>
-                <Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">Trades Recientes</CardTitle></CardHeader><CardContent><div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-zinc-500 text-xs border-b border-[#222]"><th className="text-left py-2 px-2">Fecha</th><th className="text-left py-2 px-2">Simbolo</th><th className="text-left py-2 px-2">Dir</th><th className="text-right py-2 px-2">Entrada</th><th className="text-right py-2 px-2">Salida</th><th className="text-right py-2 px-2">P&L</th><th className="text-left py-2 px-2">Setup</th></tr></thead><tbody>{trades.slice(0,10).map(t=>(<tr key={t.id} className="border-b border-[#1a1a1a] hover:bg-[#1a1a1a] cursor-pointer" onClick={()=>openTrade(t)}><td className="py-2 px-2 text-zinc-300">{fmtDateShort(t.date)}</td><td className="py-2 px-2 text-white font-medium">{t.symbol}</td><td className="py-2 px-2"><Badge className={t.direction==='LONG'?'bg-[#00c853]/20 text-[#00c853] border-[#00c853]/30':'bg-[#e31937]/20 text-[#e31937] border-[#e31937]/30'}>{t.direction}</Badge></td><td className="py-2 px-2 text-right text-zinc-300">${t.entryPrice}</td><td className="py-2 px-2 text-right text-zinc-300">${t.exitPrice}</td><td className={`py-2 px-2 text-right font-bold ${calcPnL(t)>=0?'text-[#00c853]':'text-[#e31937]'}`}>{fmt$(calcPnL(t))}</td><td className="py-2 px-2 text-zinc-400 text-xs">{t.setup||'-'}</td></tr>))}</tbody></table></div>{trades.length===0&&<p className="text-zinc-500 text-sm text-center py-4">No hay trades todavia</p>}</CardContent></Card></>
+                <Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">Trades Recientes</CardTitle></CardHeader><CardContent><div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-zinc-500 text-xs border-b border-[#222]"><th className="text-left py-2 px-2">Fecha</th><th className="text-left py-2 px-2">Simbolo</th><th className="text-left py-2 px-2">Dir</th><th className="text-right py-2 px-2">Entrada</th><th className="text-right py-2 px-2">Salida</th><th className="text-right py-2 px-2">P&L</th><th className="text-left py-2 px-2">Setup</th></tr></thead><tbody>{trades.slice(0,10).map(t=>(<tr key={t.id} className="border-b border-[#1a1a1a] hover:bg-[#1a1a1a] cursor-pointer" onClick={()=>openTrade(t)}><td className="py-2 px-2 text-zinc-300">{fmtDateShort(t.date)}</td><td className="py-2 px-2 text-white font-medium">{t.symbol}</td><td className="py-2 px-2"><Badge className={t.direction==='LONG'?'bg-[#00c853]/20 text-[#00c853] border-[#00c853]/30':'bg-[#e31937]/20 text-[#e31937] border-[#e31937]/30'}>{t.direction}</Badge></td><td className="py-2 px-2 text-right text-zinc-300">${t.entryPrice}</td><td className="py-2 px-2 text-right text-zinc-300">${t.exitPrice}</td><td className={`py-2 px-2 text-right font-bold ${calcRealPnL(t)>=0?'text-[#00c853]':'text-[#e31937]'}`}>{fmt$(calcRealPnL(t))}</td><td className="py-2 px-2 text-zinc-400 text-xs">{t.setup||'-'}</td></tr>))}</tbody></table></div>{trades.length===0&&<p className="text-zinc-500 text-sm text-center py-4">No hay trades todavia</p>}</CardContent></Card></>
               )||<Card className="bg-[#111] border-[#222]"><CardContent className="p-8 text-center"><p className="text-zinc-400">No hay datos todavia. Agrega tu primer trade.</p></CardContent></Card>}
             </div>
           )}
@@ -550,7 +557,7 @@ export default function Home(){
                 {trades.map(t=>(<Card key={t.id} className="bg-[#111] border-[#222]"><CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3"><Badge className={t.direction==='LONG'?'bg-[#00c853]/20 text-[#00c853]':'bg-[#e31937]/20 text-[#e31937]'}>{t.direction}</Badge><span className="font-semibold">{t.symbol}</span><span className="text-xs text-zinc-500">{t.setup}</span></div>
-                    <div className="flex items-center gap-2"><span className={`font-bold text-lg ${calcPnL(t)>=0?'text-[#00c853]':'text-[#e31937]'}`}>{fmt$(calcPnL(t))}</span><button onClick={()=>openTrade(t)} className="p-1 hover:bg-[#1a1a1a] rounded"><Pencil size={14}/></button><button onClick={()=>deleteTrade(t.id,t._dbId)} className="p-1 hover:bg-[#1a1a1a] rounded text-[#e31937]"><Trash2 size={14}/></button></div>
+                    <div className="flex items-center gap-2"><span className={`font-bold text-lg ${calcRealPnL(t)>=0?'text-[#00c853]':'text-[#e31937]'}`}>{fmt$(calcRealPnL(t))}</span><button onClick={()=>openTrade(t)} className="p-1 hover:bg-[#1a1a1a] rounded"><Pencil size={14}/></button><button onClick={()=>deleteTrade(t.id,t._dbId)} className="p-1 hover:bg-[#1a1a1a] rounded text-[#e31937]"><Trash2 size={14}/></button></div>
                   </div>
                   <div className="grid grid-cols-4 gap-4 mt-3 text-xs text-zinc-400">
                     <div>Entry: <span className="text-white">${t.entryPrice}</span></div>
@@ -897,6 +904,49 @@ export default function Home(){
                 <div className="flex flex-col gap-1"><label className="flex items-center gap-2 text-zinc-300 text-xs font-medium">Shares (Cantidad)</label><input type="number" step="any" placeholder="0.00" value={tf.shares} onChange={e=>{const val=e.target.value.replace(",",".");setTf(p=>({...p,shares:val}))}} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white mt-1 outline-none focus:border-[#e31937] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
                 <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Setup</label><Input list="setups-list" value={tf.setup} onChange={e=>setTf(p=>({...p,setup:e.target.value}))} className="bg-[#1a1a1a] border border-[#333] h-9 text-sm text-white focus:border-[#e31937] outline-none transition-colors" placeholder="Escribe o elige..."/><datalist id="setups-list">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist></div>
               </div>
+
+              {/* Liquidacion Final */}
+              {(()=>{
+                const ep=parseFloat(tf.entryPrice)||0,xp=parseFloat(tf.exitPrice)||0,sh=parseFloat(tf.shares)||0
+                const comm=parseFloat(tf.commission)||0,bf=parseFloat(tf.brokerFees)||0,ps=parseInt(tf.profitSplit)||100
+                const rawPnl=tf.direction==='LONG'?(xp-ep)*sh:(ep-xp)*sh
+                const grossPnl=rawPnl-comm
+                const netReal=Math.round((grossPnl-bf)*(ps/100)*100)/100
+                const hasValues=ep>0&&xp>0&&sh>0
+                return(
+              <div className="space-y-2 p-3 bg-zinc-900/50 border border-[#333] rounded-lg mt-2">
+                <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Liquidacion Final</p>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-zinc-400">Bruto P&L:</span>
+                  <span className="text-white font-medium">{hasValues?fmt$(rawPnl):'$0.00'}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-zinc-400">- Comision:</span>
+                  <span className="text-[#e31937]">{comm>0?`-$${comm.toFixed(2)}`:'$0.00'}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-zinc-400">Spread/Broker:</span>
+                  <input type="number" step="any" placeholder="0.00" value={tf.brokerFees} onChange={e=>{const val=e.target.value.replace(",",".");setTf(p=>({...p,brokerFees:val}))}} className="w-20 bg-[#1a1a1a] border border-[#444] rounded px-2 py-0.5 text-right text-white outline-none focus:border-[#e31937] text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-zinc-400">Profit Split (Prop Firm):</span>
+                  <select value={tf.profitSplit} onChange={e=>setTf(p=>({...p,profitSplit:e.target.value}))} className="bg-[#1a1a1a] border border-[#444] rounded px-2 py-0.5 text-white outline-none text-xs">
+                    <option value="100">100% (Examen)</option>
+                    <option value="90">90% (Fondeado)</option>
+                    <option value="85">85% (Fondeado)</option>
+                    <option value="80">80% (Fondeado)</option>
+                    <option value="75">75% (Fondeado)</option>
+                  </select>
+                </div>
+                <hr className="border-[#333] my-1"/>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-bold text-white">Ganancia Neta Real:</span>
+                  <span className={`text-lg font-bold ${hasValues?(netReal>=0?'text-[#00c853]':'text-[#e31937]'):'text-zinc-600'}`}>{hasValues?fmt$(netReal):'$0.00'}</span>
+                </div>
+                {ps<100&&hasValues&&grossPnl>0&&<p className="text-[10px] text-zinc-500 italic text-right">{fmt$(grossPnl-bf)} x {ps}% = {fmt$(netReal)}</p>}
+              </div>
+                )
+              })()}
 
               {/* Emocion Slider */}
               <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Emocion (1-10)</label><div className="flex items-center gap-3 mt-2"><span className="text-sm grayscale hover:grayscale-0 transition-all cursor-default">😰</span><div className="relative flex-1 flex items-center"><input type="range" min="1" max="10" value={tf.emotion} onChange={e=>setTf(p=>({...p,emotion:Number(e.target.value)}))} className="w-full h-1.5 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#e31937] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-[#e31937]/50 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#e31937] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer" style={{background:`linear-gradient(to right, #e31937 ${(tf.emotion-1)*11.1}%, #27272a 0%)`}}/></div><span className="text-sm">🔥</span><span className="text-sm font-medium w-6 text-center text-white">{tf.emotion}</span></div><p className="text-[10px] text-zinc-500 mt-2 italic text-center">{tf.emotion>7?"Cuidado con el exceso de confianza (Greed)":tf.emotion<4?"Posible miedo o inseguridad":"Estado equilibrado"}</p></div>
