@@ -834,7 +834,7 @@ export default function Home(){
               <div><Label className="text-xs text-zinc-400">Stop Loss</Label><Input value={tf.stopLoss} onChange={e=>setTf(p=>({...p,stopLoss:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
               <div><Label className="text-xs text-zinc-400">Take Profit</Label><Input value={tf.takeProfit} onChange={e=>setTf(p=>({...p,takeProfit:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
               <div><Label className="text-xs text-zinc-400">Shares</Label><Input value={tf.shares} onChange={e=>setTf(p=>({...p,shares:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-              <div><Label className="text-xs text-zinc-400">Emocion (1-10)</Label><Slider min={1} max={10} value={[tf.emotion]} onValueChange={v=>setTf(p=>({...p,emotion:v[0]}))} className="mt-3"/></div>
+              <div><Label className="text-xs text-zinc-400">Emocion <span className="font-bold text-white text-sm">{tf.emotion}</span>/10</Label><Slider min={1} max={10} value={[tf.emotion]} onValueChange={v=>setTf(p=>({...p,emotion:v[0]}))} className="mt-3"/></div>
             </div>
             <div><Label className="text-xs text-zinc-400">Notas</Label><Textarea value={tf.notes} onChange={e=>setTf(p=>({...p,notes:e.target.value}))} placeholder="Que paso?" rows={2} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
             <div><Label className="text-xs text-zinc-400">Tags</Label><Input value={tf.tags} onChange={e=>setTf(p=>({...p,tags:e.target.value}))} placeholder="gap, vwap, momentum" className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
