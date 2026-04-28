@@ -20,7 +20,7 @@ import { LayoutDashboard, BookOpen, BarChart3, GraduationCap, User, LogIn, Plus,
 interface User { id:string;email:string;name:string;avatar:string|null;broker:string|null;createdAt:string;password?:string }
 interface Trade { id:number;userId:string;date:string;symbol:string;direction:string;entryPrice:number;exitPrice:number;stopLoss:number|null;takeProfit:number|null;shares:number;setup:string|null;notes:string|null;emotion:number|null;screenshot:string|null;tags:string|null;createdAt:string;_dbId?:string }
 const DEFAULT_SETUPS=['VWAP Bounce','Bollinger Squeeze','EMA Cross','Gap Fill','Reversal','Otro']
-const SYMBOLS=['TSLA','SPY','AAPL','NVDA','AMZN','META','GOOGL','MSFT','AMD','QQQ']
+const DEFAULT_SYMBOLS=['TSLA','SPY','AAPL','NVDA','AMZN','META','GOOGL','MSFT','AMD','QQQ']
 
 /* ─── STORAGE ─── */
 function getStore<T>(k:string,f:T){if(typeof window==='undefined')return f;try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch{return f}}
@@ -503,7 +503,7 @@ export default function Home(){
           {page==='journal'&&(
             <div className="space-y-4">
               <div className="flex flex-wrap gap-2">
-                <Select value={fSymbol} onValueChange={v=>setFSymbol(v)}><SelectTrigger className="w-28 bg-[#1a1a1a] border-[#333] text-xs h-8"><SelectValue placeholder="Symbol"/></SelectTrigger><SelectContent>{SYMBOLS.map(s=><SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select>
+                <Input list="filter-symbols" value={fSymbol} onChange={e=>setFSymbol(e.target.value)} className="w-28 bg-[#1a1a1a] border-[#333] text-xs h-8" placeholder="Symbol"/><datalist id="filter-symbols">{DEFAULT_SYMBOLS.map(s=><option key={s} value={s}/>)}</datalist>
                 <Select value={fDir} onValueChange={v=>setFDir(v)}><SelectTrigger className="w-28 bg-[#1a1a1a] border-[#333] text-xs h-8"><SelectValue placeholder="Dir"/></SelectTrigger><SelectContent><SelectItem value="LONG">LONG</SelectItem><SelectItem value="SHORT">SHORT</SelectItem></SelectContent></Select>
                 <Input list="filter-setups" value={fSetup} onChange={e=>setFSetup(e.target.value)} className="w-36 bg-[#1a1a1a] border-[#333] text-xs h-8" placeholder="Setup"/><datalist id="filter-setups">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist>
                 <Input type="date" value={fFrom} onChange={e=>setFFrom(e.target.value)} className="w-36 bg-[#1a1a1a] border-[#333] text-xs h-8"/>
@@ -826,7 +826,7 @@ export default function Home(){
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div><Label className="text-xs text-zinc-400">Fecha</Label><Input type="datetime-local" value={tf.date} onChange={e=>setTf(p=>({...p,date:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-              <div><Label className="text-xs text-zinc-400">Symbol</Label><Select value={tf.symbol} onValueChange={v=>setTf(p=>({...p,symbol:v}))}><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent>{SYMBOLS.map(s=><SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
+              <div><Label className="text-xs text-zinc-400">Symbol</Label><Input list="symbols-list" value={tf.symbol} onChange={e=>setTf(p=>({...p,symbol:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1" placeholder="Escribe o elige..."/><datalist id="symbols-list">{DEFAULT_SYMBOLS.map(s=><option key={s} value={s}/>)}</datalist></div>
               <div><Label className="text-xs text-zinc-400">Direccion</Label><Select value={tf.direction} onValueChange={v=>setTf(p=>({...p,direction:v}))}><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="LONG">LONG</SelectItem><SelectItem value="SHORT">SHORT</SelectItem></SelectContent></Select></div>
               <div><Label className="text-xs text-zinc-400">Setup</Label><Input list="setups-list" value={tf.setup} onChange={e=>setTf(p=>({...p,setup:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1" placeholder="Escribe o elige..."/><datalist id="setups-list">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist></div>
               <div><Label className="text-xs text-zinc-400">Entry Price</Label><Input value={tf.entryPrice} onChange={e=>setTf(p=>({...p,entryPrice:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
