@@ -9,15 +9,11 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
-    let pathname = parsedUrl.pathname;
+    let pathname = parsedUrl.pathname || '/';
 
-    // Remove trailing slash to prevent redirect loops
+    // Strip trailing slash internally (no redirect, serve the page directly)
     if (pathname !== '/' && pathname.endsWith('/')) {
-      pathname = pathname.slice(0, -1);
-      parsedUrl.pathname = pathname;
-      res.writeHead(301, { Location: parsedUrl.pathname + (parsedUrl.search || '') });
-      res.end();
-      return;
+      parsedUrl.pathname = pathname.slice(0, -1);
     }
 
     handle(req, res, parsedUrl);
