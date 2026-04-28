@@ -241,6 +241,7 @@ export default function Home(){
   const [calcCap,setCalcCap]=useState('25000');const [calcRisk,setCalcRisk]=useState('1');const [calcStop,setCalcStop]=useState('0.50');const [calcEntry,setCalcEntry]=useState('250');const [calcDir,setCalcDir]=useState<'LONG'|'SHORT'>('LONG')
   const [checkItems,setCheckItems]=useState<Record<string,boolean>>({});const [checkHistory,setCheckHistory]=useState<{date:string,done:number,total:number}[]>([])
   const [psychEntries,setPsychEntries]=useState<{id:number,date:string,pre:number,post:number,conf:number,disc:number,quality:string,notes:string}[]>([])
+  const [psychPre,setPsychPre]=useState(5);const [psychPost,setPsychPost]=useState(5);const [psychConf,setPsychConf]=useState(5);const [psychDisc,setPsychDisc]=useState(5);const [psychQuality,setPsychQuality]=useState('Normal');const [psychNotes,setPsychNotes]=useState('')
   const [timerRun,setTimerRun]=useState(false);const [timerSec,setTimerSec]=useState(0);const [pomMin,setPomMin]=useState(25);const [pomRun,setPomRun]=useState(false);const [pomSec,setPomSec]=useState(25*60);const [sesCount,setSesCount]=useState(0)
   const [goals,setGoals]=useState<{id:number,type:string,target:string,current:string,unit:string,period:string,createdAt:string}[]>([])
   const [simBal,setSimBal]=useState(25000);const [simTrades,setSimTrades]=useState<{id:number,date:string,dir:string,entry:number,exit:number,shares:number,pnl:number}[]>([])
@@ -614,20 +615,40 @@ export default function Home(){
           })()}
 
           {/* PSYCHOLOGY */}
-          {page==='psychology'&&(
-            <div className="space-y-4">
-              <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 space-y-4">
-                <h3 className="text-sm font-semibold">Nueva Entrada</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><Label className="text-xs">Pre-Sesion Emocion (1-10)</Label><Slider min={1} max={10} value={[5]} onValueChange={v=>setPsychEntries(prev=>[...prev])} className="mt-2"/></div>
-                  <div><Label className="text-xs">Calidad de Sesion</Label><Select defaultValue="Normal"><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="Excelente">Excelente</SelectItem><SelectItem value="Normal">Normal</SelectItem><SelectItem value="Mala">Mala</SelectItem><SelectItem value="Terrible">Terrible</SelectItem></SelectContent></Select></div>
+          {page==='psychology'&&(()=>{
+            const avgPre=psychEntries.length?Math.round(psychEntries.reduce((a,e)=>a+e.pre,0)/psychEntries.length*10)/10:0
+            const avgPost=psychEntries.length?Math.round(psychEntries.reduce((a,e)=>a+e.post,0)/psychEntries.length*10)/10:0
+            const trendLabel=psychEntries.length>=2?(() => {const last3=psychEntries.slice(-3);const diff=last3[last3.length-1].post-last3[0].pre;if(diff>1)return'Positiva';if(diff<-1)return'Negativa';return'Estable'})():'Sin datos'
+            const trendColor=trendLabel==='Positiva'?'text-[#00c853]':trendLabel==='Negativa'?'text-[#e31937]':'text-[#f59e0b]'
+            return(<div className="space-y-4">
+              <div><h3 className="text-sm font-semibold">Psicologia del Trader</h3><p className="text-xs text-zinc-500">Rastrea tu estado mental y emocional</p></div>
+              {/* 4 Summary Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 text-center"><p className="text-[10px] text-zinc-500 uppercase">Emocion Pre</p><p className="text-2xl font-bold mt-1" style={{color:'#ff6b00'}}>{avgPre||psychPre}</p><p className="text-lg">{avgPre>=7?'😊':avgPre>=4?'😐':'😟'}</p></CardContent></Card>
+                <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 text-center"><p className="text-[10px] text-zinc-500 uppercase">Emocion Post</p><p className="text-2xl font-bold mt-1" style={{color:'#00d4ff'}}>{avgPost||psychPost}</p><p className="text-lg">{avgPost>=7?'😊':avgPost>=4?'😐':'😟'}</p></CardContent></Card>
+                <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 text-center"><p className="text-[10px] text-zinc-500 uppercase">Registros</p><p className="text-2xl font-bold mt-1">{psychEntries.length}</p><p className="text-xs text-zinc-500">total</p></CardContent></Card>
+                <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 text-center"><p className="text-[10px] text-zinc-500 uppercase">Tendencia</p><p className={`text-lg font-bold mt-1 ${trendColor}`}>{trendLabel}</p><p className="text-lg">{trendLabel==='Positiva'?'📈':trendLabel==='Negativa'?'📉':'➡️'}</p></CardContent></Card>
+              </div>
+              {/* New Entry Form */}
+              <Card className="bg-[#111] border-[#222]"><CardContent className="p-5 space-y-4">
+                <h4 className="text-sm font-semibold">Nuevo Registro</h4>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><Label className="text-xs text-zinc-400">Pre-sesion Emocion <span className="font-bold text-white">{psychPre}</span>/10</Label><Slider min={1} max={10} value={[psychPre]} onValueChange={v=>setPsychPre(v[0])} className="mt-2"/></div>
+                    <div><Label className="text-xs text-zinc-400">Post-sesion Emocion <span className="font-bold text-white">{psychPost}</span>/10</Label><Slider min={1} max={10} value={[psychPost]} onValueChange={v=>setPsychPost(v[0])} className="mt-2"/></div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><Label className="text-xs text-zinc-400">Confianza <span className="font-bold text-white">{psychConf}</span>/10</Label><Slider min={1} max={10} value={[psychConf]} onValueChange={v=>setPsychConf(v[0])} className="mt-2"/></div>
+                    <div><Label className="text-xs text-zinc-400">Disciplina <span className="font-bold text-white">{psychDisc}</span>/10</Label><Slider min={1} max={10} value={[psychDisc]} onValueChange={v=>setPsychDisc(v[0])} className="mt-2"/></div>
+                  </div>
+                  <div><Label className="text-xs text-zinc-400">Calidad de Sesion</Label><Select value={psychQuality} onValueChange={setPsychQuality}><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="Excelente">Excelente</SelectItem><SelectItem value="Normal">Normal</SelectItem><SelectItem value="Mala">Mala</SelectItem><SelectItem value="Terrible">Terrible</SelectItem></SelectContent></Select></div>
                 </div>
-                <Textarea placeholder="Notas de la sesion..." className="bg-[#1a1a1a] border-[#333] min-h-[60px]"/>
-                <Button className="bg-[#e31937] hover:bg-[#c41530] text-white" onClick={()=>{const id=psychEntries.length>0?Math.max(...psychEntries.map(e=>e.id))+1:1;setPsychEntries(p=>[...p,{id,date:new Date().toISOString(),pre:5,post:5,conf:5,disc:5,quality:'Normal',notes:''}]);showToast('Entrada guardada')}}>Guardar</Button>
+                <Button className="bg-[#e31937] hover:bg-[#c41530] text-white" onClick={()=>{const id=psychEntries.length>0?Math.max(...psychEntries.map(e=>e.id))+1:1;setPsychEntries(p=>[...p,{id,date:new Date().toISOString(),pre:psychPre,post:psychPost,conf:psychConf,disc:psychDisc,quality:psychQuality,notes:psychNotes}]);setPsychPre(5);setPsychPost(5);setPsychConf(5);setPsychDisc(5);setPsychQuality('Normal');setPsychNotes('');showToast('Registro guardado')}}>Guardar Registro</Button>
               </CardContent></Card>
-              {psychEntries.length>0&&<Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">Historial</CardTitle></CardHeader><CardContent className="space-y-2">{psychEntries.slice().reverse().slice(0,10).map(e=>(<div key={e.id} className="p-3 rounded-lg bg-[#1a1a1a] flex justify-between items-center"><div><p className="text-xs font-medium">{fmtDateShort(e.date)}</p><p className="text-xs text-zinc-400">{e.quality} - {e.notes.slice(0,50)}{e.notes.length>50?'...':''}</p></div><Badge className={e.quality==='Excelente'?'bg-[#00c853]/20 text-[#00c853]':e.quality==='Terrible'?'bg-[#e31937]/20 text-[#e31937]':'bg-[#333] text-zinc-400'}>{e.quality}</Badge></div>))}</CardContent></Card>}
-            </div>
-          )}
+              {/* Recent Records */}
+              {psychEntries.length>0&&<Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">Registros Recientes</CardTitle></CardHeader><CardContent className="space-y-2">{psychEntries.slice().reverse().slice(0,10).map(e=>(<div key={e.id} className="p-3 rounded-lg bg-[#1a1a1a] flex justify-between items-center"><div className="flex items-center gap-3"><div><p className="text-xs font-medium">{fmtDateShort(e.date)}</p><p className="text-xs text-zinc-400">Pre: {e.pre} | Post: {e.post} | Conf: {e.conf} | Disc: {e.disc}</p></div></div><Badge className={e.quality==='Excelente'?'bg-[#00c853]/20 text-[#00c853]':e.quality==='Mala'?'bg-[#f59e0b]/20 text-[#f59e0b]':e.quality==='Terrible'?'bg-[#e31937]/20 text-[#e31937]':'bg-[#333] text-zinc-400'}>{e.quality}</Badge></div>))}</CardContent></Card>}
+            </div>)
+          })()}
 
           {/* TIMER */}
           {page==='timer'&&(
