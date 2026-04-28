@@ -19,7 +19,7 @@ import { LayoutDashboard, BookOpen, BarChart3, GraduationCap, User, LogIn, Plus,
 /* ─── TYPES ─── */
 interface User { id:string;email:string;name:string;avatar:string|null;broker:string|null;createdAt:string;password?:string }
 interface Trade { id:number;userId:string;date:string;symbol:string;direction:string;entryPrice:number;exitPrice:number;stopLoss:number|null;takeProfit:number|null;shares:number;setup:string|null;notes:string|null;emotion:number|null;screenshot:string|null;tags:string|null;createdAt:string;_dbId?:string }
-const SETUPS=['VWAP Bounce','Bollinger Squeeze','EMA Cross','Gap Fill','Reversal','Otro']
+const DEFAULT_SETUPS=['VWAP Bounce','Bollinger Squeeze','EMA Cross','Gap Fill','Reversal','Otro']
 const SYMBOLS=['TSLA','SPY','AAPL','NVDA','AMZN','META','GOOGL','MSFT','AMD','QQQ']
 
 /* ─── STORAGE ─── */
@@ -505,7 +505,7 @@ export default function Home(){
               <div className="flex flex-wrap gap-2">
                 <Select value={fSymbol} onValueChange={v=>setFSymbol(v)}><SelectTrigger className="w-28 bg-[#1a1a1a] border-[#333] text-xs h-8"><SelectValue placeholder="Symbol"/></SelectTrigger><SelectContent>{SYMBOLS.map(s=><SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select>
                 <Select value={fDir} onValueChange={v=>setFDir(v)}><SelectTrigger className="w-28 bg-[#1a1a1a] border-[#333] text-xs h-8"><SelectValue placeholder="Dir"/></SelectTrigger><SelectContent><SelectItem value="LONG">LONG</SelectItem><SelectItem value="SHORT">SHORT</SelectItem></SelectContent></Select>
-                <Select value={fSetup} onValueChange={v=>setFSetup(v)}><SelectTrigger className="w-36 bg-[#1a1a1a] border-[#333] text-xs h-8"><SelectValue placeholder="Setup"/></SelectTrigger><SelectContent>{SETUPS.map(s=><SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select>
+                <Input list="filter-setups" value={fSetup} onChange={e=>setFSetup(e.target.value)} className="w-36 bg-[#1a1a1a] border-[#333] text-xs h-8" placeholder="Setup"/><datalist id="filter-setups">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist>
                 <Input type="date" value={fFrom} onChange={e=>setFFrom(e.target.value)} className="w-36 bg-[#1a1a1a] border-[#333] text-xs h-8"/>
                 <Input type="date" value={fTo} onChange={e=>setFTo(e.target.value)} className="w-36 bg-[#1a1a1a] border-[#333] text-xs h-8"/>
                 <Button size="sm" variant="outline" className="border-[#333] text-xs h-8" onClick={()=>{setFSymbol('');setFDir('');setFSetup('');setFFrom('');setFTo('')}}>Limpiar</Button>
@@ -828,7 +828,7 @@ export default function Home(){
               <div><Label className="text-xs text-zinc-400">Fecha</Label><Input type="datetime-local" value={tf.date} onChange={e=>setTf(p=>({...p,date:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
               <div><Label className="text-xs text-zinc-400">Symbol</Label><Select value={tf.symbol} onValueChange={v=>setTf(p=>({...p,symbol:v}))}><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent>{SYMBOLS.map(s=><SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
               <div><Label className="text-xs text-zinc-400">Direccion</Label><Select value={tf.direction} onValueChange={v=>setTf(p=>({...p,direction:v}))}><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="LONG">LONG</SelectItem><SelectItem value="SHORT">SHORT</SelectItem></SelectContent></Select></div>
-              <div><Label className="text-xs text-zinc-400">Setup</Label><Select value={tf.setup} onValueChange={v=>setTf(p=>({...p,setup:v}))}><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent>{SETUPS.map(s=><SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
+              <div><Label className="text-xs text-zinc-400">Setup</Label><Input list="setups-list" value={tf.setup} onChange={e=>setTf(p=>({...p,setup:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1" placeholder="Escribe o elige..."/><datalist id="setups-list">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist></div>
               <div><Label className="text-xs text-zinc-400">Entry Price</Label><Input value={tf.entryPrice} onChange={e=>setTf(p=>({...p,entryPrice:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
               <div><Label className="text-xs text-zinc-400">Exit Price</Label><Input value={tf.exitPrice} onChange={e=>setTf(p=>({...p,exitPrice:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
               <div><Label className="text-xs text-zinc-400">Stop Loss</Label><Input value={tf.stopLoss} onChange={e=>setTf(p=>({...p,stopLoss:e.target.value}))} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
