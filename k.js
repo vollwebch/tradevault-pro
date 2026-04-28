@@ -1,19 +1,27 @@
-const http = require('http');
+const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 
-const app = next({ dev: false, dir: '/home/z/my-project', hostname: '0.0.0.0', port: 3000 });
+const port = parseInt(process.env.PORT || '3000', 10);
+const app = next({ dev: false });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-  http.createServer((req, res) => {
-    let url = req.url || '/';
-    if (url.length > 1 && url.endsWith('/')) url = url.slice(0, -1);
-    const origUrl = req.url;
-    req.url = url;
-    handle(req, res, parse(url, true));
-    req.url = origUrl;
-  }).listen(3000, '0.0.0.0', () => console.log('READY'));
-}).catch(e => { console.error(e); process.exit(1); });
+  createServer((req, res) => {
+    const parsedUrl = parse(req.url, true);
+    let pathname = parsedUrl.pathname;
 
-setInterval(() => { try { http.get('http://127.0.0.1:3000/', () => {}) } catch(e) {} }, 10000);
+    // Remove trailing slash to prevent redirect loops
+    if (pathname !== '/' && pathname.endsWith('/')) {
+      pathname = pathname.slice(0, -1);
+      parsedUrl.pathname = pathname;
+      res.writeHead(301, { Location: parsedUrl.pathname + (parsedUrl.search || '') });
+      res.end();
+      return;
+    }
+
+    handle(req, res, parsedUrl);
+  }).listen(port, () => {
+    console.log(`> Ready on http://localhost:${port}`);
+  });
+});
