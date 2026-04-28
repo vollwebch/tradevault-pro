@@ -309,7 +309,18 @@ export default function Home(){
       setPlayStatus(getStore(`tv_play_${u.id}`,{}));setReviews(getStore(`tv_rev_${u.id}`,[]))
       // Load trades from API, fallback to localStorage
       const token=getStore<string>('tv_token','')
-      if(token){fetch('/api/trades',{headers:{'Authorization':`Bearer ${token}`}}).then(r=>r.json()).then(d=>{if(d.trades){setAllTrades(d.trades);setStore(`tv_trades_${u.id}`,d.trades)}}).catch(()=>{setAllTrades(getStore<Trade[]>(`tv_trades_${u.id}`,[]))})}else{setAllTrades(getStore<Trade[]>(`tv_trades_${u.id}`,[]))}
+      if(token){
+        // Validate token first
+        fetch('/api/auth/me',{headers:{'Authorization':`Bearer ${token}`}}).then(r=>{
+          if(!r.ok){
+            // Token invalid, force logout
+            setUser(null);setPage('auth');setAllTrades([]);localStorage.removeItem('tv_token');localStorage.removeItem('tv_user');return
+          }
+          return fetch('/api/trades',{headers:{'Authorization':`Bearer ${token}`}})
+        }).then(r2=>{
+          if(r2)r2.json().then(d=>{if(d.trades){setAllTrades(d.trades);setStore(`tv_trades_${u.id}`,d.trades)}})
+        }).catch(()=>{setAllTrades(getStore<Trade[]>(`tv_trades_${u.id}`,[]))})
+      }else{setAllTrades(getStore<Trade[]>(`tv_trades_${u.id}`,[]))}
     }
     setMounted(true)
   },[])
