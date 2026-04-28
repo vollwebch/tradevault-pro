@@ -34,7 +34,7 @@ function fmtDateShort(d:string){return new Date(d).toLocaleDateString('es-US',{m
 const COLORS=['#00c853','#e31937','#00d4ff','#a855f7','#f59e0b','#ff6b00','#14b8a6','#ef4444']
 
 /* ─── IMAGE COMPRESSOR ─── */
-function compressImage(file:File,maxW=800,maxH=800,quality=0.8):Promise<string>{
+function compressImage(file:File,maxW=900,maxH=900,quality=0.75):Promise<string>{
   return new Promise((resolve)=>{
     const img=new Image()
     img.onload=()=>{
@@ -43,8 +43,13 @@ function compressImage(file:File,maxW=800,maxH=800,quality=0.8):Promise<string>{
       if(w>maxW||h>maxH){const r=Math.min(maxW/w,maxH/h);w=Math.round(w*r);h=Math.round(h*r)}
       canvas.width=w;canvas.height=h
       const ctx=canvas.getContext('2d')!
+      ctx.imageSmoothingEnabled=true
+      ctx.imageSmoothingQuality='high'
       ctx.drawImage(img,0,0,w,h)
-      resolve(canvas.toDataURL('image/jpeg',quality))
+      // Try WebP first (better compression), fallback to JPEG
+      const webp=canvas.toDataURL('image/webp',quality)
+      const jpeg=canvas.toDataURL('image/jpeg',quality)
+      resolve(webp.length<jpeg.length?webp:jpeg)
     }
     img.src=URL.createObjectURL(file)
   })
