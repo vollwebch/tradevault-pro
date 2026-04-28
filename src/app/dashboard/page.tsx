@@ -231,7 +231,7 @@ export default function Home(){
   const [authError,setAuthError]=useState('')
   const [tradeOpen,setTradeOpen]=useState(false)
   const [editTrade,setEditTrade]=useState<Trade|null>(null)
-  const [tf,setTf]=useState({date:new Date().toISOString().slice(0,16),symbol:'TSLA',direction:'LONG' as const,entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',setup:'VWAP Bounce',notes:'',emotion:5,tags:'',screenshot:''})
+  const [tf,setTf]=useState({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG' as const,entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',setup:'',notes:'',emotion:5,tags:'',screenshot:''})
   const [fSymbol,setFSymbol]=useState('');const [fDir,setFDir]=useState('');const [fSetup,setFSetup]=useState('');const [fFrom,setFFrom]=useState('');const [fTo,setFTo]=useState('')
   const [period,setPeriod]=useState('30')
   const [profName,setProfName]=useState('');const [profAvatar,setProfAvatar]=useState('#e31937');const [profBroker,setProfBroker]=useState('')
@@ -307,7 +307,7 @@ export default function Home(){
 
   const openTrade=(t?:Trade)=>{
     if(t){setEditTrade(t);setTf({date:t.date.slice(0,16),symbol:t.symbol,direction:t.direction as 'LONG',entryPrice:String(t.entryPrice),exitPrice:String(t.exitPrice),stopLoss:t.stopLoss?String(t.stopLoss):'',takeProfit:t.takeProfit?String(t.takeProfit):'',shares:String(t.shares),setup:t.setup||'VWAP Bounce',notes:t.notes||'',emotion:t.emotion||5,tags:t.tags||'',screenshot:t.screenshot||''})}
-    else{setEditTrade(null);setTf({date:new Date().toISOString().slice(0,16),symbol:'TSLA',direction:'LONG',entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',setup:'VWAP Bounce',notes:'',emotion:5,tags:'',screenshot:''})}
+    else{setEditTrade(null);setTf({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG',entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',setup:'',notes:'',emotion:5,tags:'',screenshot:''})}
     setTradeOpen(true)
   }
 
