@@ -10,8 +10,7 @@ const globalForDb = globalThis as unknown as {
 }
 
 const db = globalForDb._tradevaultDb ?? new Database(DB_PATH)
-
-if (process.env.NODE_ENV !== 'production') globalForDb._tradevaultDb = db
+globalForDb._tradevaultDb = db
 
 // Enable WAL mode for better performance
 db.pragma('journal_mode = WAL')
