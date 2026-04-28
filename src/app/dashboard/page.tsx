@@ -27,7 +27,7 @@ function getStore<T>(k:string,f:T){if(typeof window==='undefined')return f;try{c
 function setStore<T>(k:string,v:T){if(typeof window!=='undefined')localStorage.setItem(k,JSON.stringify(v))}
 
 /* ─── HELPERS ─── */
-function calcPnL(t:Trade){return t.direction==='LONG'?(t.exitPrice-t.entryPrice)*t.shares:(t.entryPrice-t.exitPrice)*t.shares}
+function calcPnL(t:Trade){const raw=t.direction==='LONG'?(t.exitPrice-t.entryPrice)*t.shares:(t.entryPrice-t.exitPrice)*t.shares;const comm=t.commission||0;return raw-comm}
 function fmt$(n:number){return `$${n>=0?'+':''}${n.toFixed(2)}`}
 function fmtDate(d:string){return new Date(d).toLocaleDateString('es-US',{month:'short',day:'numeric',year:'numeric'})}
 function fmtDateShort(d:string){return new Date(d).toLocaleDateString('es-US',{month:'short',day:'numeric'})}
