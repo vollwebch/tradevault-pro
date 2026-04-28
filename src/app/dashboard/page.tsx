@@ -249,6 +249,7 @@ export default function Home(){
   const [calFilter,setCalFilter]=useState('all');const [calImpact,setCalImpact]=useState('all')
   const [heatView,setHeatView]=useState<'pnl'|'count'>('pnl')
   const [playStatus,setPlayStatus]=useState<Record<string,string>>({})
+  const [imgModal,setImgModal]=useState<string|null>(null)
   const [revDate,setRevDate]=useState(new Date().toISOString().slice(0,10));const [revScore,setRevScore]=useState(5);const [revPlan,setRevPlan]=useState(false);const [revBest,setRevBest]=useState('');const [revWorst,setRevWorst]=useState('');const [revLesson,setRevLesson]=useState('');const [revEmotion,setRevEmotion]=useState(5);const [revRules,setRevRules]=useState<Record<string,boolean>>({});const [revNotes,setRevNotes]=useState('')
   const [reviews,setReviews]=useState<{id:number,date:string,score:number,best:string,worst:string,lesson:string,emotion:number,rules:Record<string,boolean>,notes:string,plan:boolean}[]>([])
 
@@ -526,6 +527,7 @@ export default function Home(){
                     {t.takeProfit&&<div>Target: <span className="text-white">${t.takeProfit}</span></div>}
                     {t.emotion&&<div>Emocion: <span className="text-white">{t.emotion}/10</span></div>}
                     {t.notes&&<div className="col-span-4">Notas: <span className="text-zinc-300">{t.notes}</span></div>}
+                    {t.screenshot&&<div className="col-span-4 mt-2"><img src={t.screenshot} alt="screenshot" className="h-24 rounded-lg border border-[#333] cursor-pointer hover:border-[#e31937] transition-colors object-cover" onClick={()=>setImgModal(t.screenshot)}/></div>}
                   </div>
                 </CardContent></Card>))}
                 {trades.length===0&&<p className="text-zinc-500 text-center py-8">No hay trades</p>}
@@ -872,6 +874,9 @@ export default function Home(){
             </div>
           </div>
         </div>}
+
+        {/* Image Modal */}
+        {imgModal&&<div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={()=>setImgModal(null)}><img src={imgModal} alt="screenshot" className="max-w-full max-h-[90vh] rounded-lg object-contain" onClick={e=>e.stopPropagation()}/></div>}
 
         {(page==='dashboard'||page==='journal'||page==='goals')&&<button onClick={()=>openTrade()} className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#e31937] hover:bg-[#c41530] shadow-lg shadow-[#e31937]/30 flex items-center justify-center lg:hidden z-50"><Plus size={24} className="text-white"/></button>}
       </main>
