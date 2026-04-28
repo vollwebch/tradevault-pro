@@ -341,21 +341,22 @@ export default function Home(){
   }
 
   const saveTrade=async()=>{
-    if(!tf.date||!tf.entryPrice||!tf.exitPrice||!tf.shares)return
+    if(!tf.date||!tf.entryPrice||!tf.exitPrice||!tf.shares){showToast('Completa los campos requeridos');return}
     const ep=parseFloat(tf.entryPrice),xp=parseFloat(tf.exitPrice),sh=parseInt(tf.shares)
-    if(isNaN(ep)||isNaN(xp)||isNaN(sh))return
+    if(isNaN(ep)||isNaN(xp)||isNaN(sh)){showToast('Valores numericos invalidos');return}
     const token=getStore<string>('tv_token','')
-    const headers={'Content-Type':'application/json','Authorization':token?`Bearer ${token}`:''}
+    if(!token){showToast('Token no encontrado, vuelve a iniciar sesion');return}
+    const headers={'Content-Type':'application/json','Authorization':`Bearer ${token}`}
     const payload={date:tf.date,symbol:tf.symbol,direction:tf.direction,entryPrice:ep,exitPrice:xp,stopLoss:tf.stopLoss?parseFloat(tf.stopLoss):null,takeProfit:tf.takeProfit?parseFloat(tf.takeProfit):null,shares:sh,setup:tf.setup,notes:tf.notes,emotion:tf.emotion,tags:tf.tags,screenshot:tf.screenshot||null}
     try{
       if(editTrade&&editTrade._dbId){
         const res=await fetch(`/api/trades/${editTrade._dbId}`,{method:'PUT',headers,body:JSON.stringify(payload)})
         if(res.ok){const d=await res.json();const updated=allTrades.map(t=>t._dbId===editTrade._dbId?{...d.trade,...(t.id===editTrade.id?{}:{})}:t);setAllTrades(updated);setStore(`tv_trades_${user!.id}`,updated);showToast('Trade actualizado')}
-        else showToast('Error al actualizar')
+        else{const err=await res.json().catch(()=>({}));showToast(err.error||'Error al actualizar')}
       }else{
         const res=await fetch('/api/trades',{method:'POST',headers,body:JSON.stringify(payload)})
         if(res.ok){const d=await res.json();const updated=[...allTrades,d.trade];setAllTrades(updated);setStore(`tv_trades_${user!.id}`,updated);showToast('Trade guardado')}
-        else showToast('Error al guardar')
+        else{const err=await res.json().catch(()=>({}));showToast(err.error||'Error al guardar')}
       }
     }catch{showToast('Error de conexion')}
     setTradeOpen(false)
