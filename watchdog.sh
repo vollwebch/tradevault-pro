@@ -1,8 +1,10 @@
 #!/bin/bash
+# watchdog.sh - keeps Next.js alive
 cd /home/z/my-project
 while true; do
-  echo "[$(date)] Starting server..."
-  npx next start -p 3000 2>&1
-  echo "[$(date)] Server died, restarting in 2s..."
-  sleep 2
+  if ! ss -tlnp | grep -q ':3000 '; then
+    echo "$(date) - Server dead, starting..." >> /tmp/watchdog.log
+    node k.js >> /tmp/next-server.log 2>&1 &
+  fi
+  sleep 5
 done
