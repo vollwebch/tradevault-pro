@@ -18,7 +18,7 @@ import { LayoutDashboard, BookOpen, BarChart3, GraduationCap, User, LogIn, Plus,
 
 /* ─── TYPES ─── */
 interface User { id:string;email:string;name:string;avatar:string|null;broker:string|null;createdAt:string;password?:string }
-interface Trade { id:number;userId:string;date:string;symbol:string;direction:string;entryPrice:number;exitPrice:number;stopLoss:number|null;takeProfit:number|null;shares:number;setup:string|null;notes:string|null;emotion:number|null;screenshot:string|null;tags:string|null;createdAt:string;_dbId?:string }
+interface Trade { id:number;userId:string;date:string;symbol:string;direction:string;entryPrice:number;exitPrice:number;stopLoss:number|null;takeProfit:number|null;shares:number;commission:number|null;setup:string|null;notes:string|null;emotion:number|null;screenshot:string|null;tags:string|null;createdAt:string;_dbId?:string }
 const DEFAULT_SETUPS=['VWAP Bounce','Bollinger Squeeze','EMA Cross','Gap Fill','Reversal','Otro']
 const DEFAULT_SYMBOLS=['TSLA','SPY','AAPL','NVDA','AMZN','META','GOOGL','MSFT','AMD','QQQ']
 
@@ -253,7 +253,7 @@ export default function Home(){
   const [authError,setAuthError]=useState('')
   const [tradeOpen,setTradeOpen]=useState(false)
   const [editTrade,setEditTrade]=useState<Trade|null>(null)
-  const [tf,setTf]=useState({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG' as const,entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',setup:'',notes:'',emotion:5,tags:'',screenshot:''})
+  const [tf,setTf]=useState({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG' as const,entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',setup:'',notes:'',emotion:5,tags:'',screenshot:''})
   const [fSymbol,setFSymbol]=useState('');const [fDir,setFDir]=useState('');const [fSetup,setFSetup]=useState('');const [fFrom,setFFrom]=useState('');const [fTo,setFTo]=useState('')
   const [period,setPeriod]=useState('30')
   const [profName,setProfName]=useState('');const [profAvatar,setProfAvatar]=useState('#e31937');const [profBroker,setProfBroker]=useState('')
@@ -340,8 +340,8 @@ export default function Home(){
   const stats=useMemo(()=>calcStats(allTrades,period),[allTrades,period])
 
   const openTrade=(t?:Trade)=>{
-    if(t){setEditTrade(t);setTf({date:t.date.slice(0,16),symbol:t.symbol,direction:t.direction as 'LONG',entryPrice:String(t.entryPrice),exitPrice:String(t.exitPrice),stopLoss:t.stopLoss?String(t.stopLoss):'',takeProfit:t.takeProfit?String(t.takeProfit):'',shares:String(t.shares),setup:t.setup||'VWAP Bounce',notes:t.notes||'',emotion:t.emotion||5,tags:t.tags||'',screenshot:t.screenshot||''})}
-    else{setEditTrade(null);setTf({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG',entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',setup:'',notes:'',emotion:5,tags:'',screenshot:''})}
+    if(t){setEditTrade(t);setTf({date:t.date.slice(0,16),symbol:t.symbol,direction:t.direction as 'LONG',entryPrice:String(t.entryPrice),exitPrice:String(t.exitPrice),stopLoss:t.stopLoss?String(t.stopLoss):'',takeProfit:t.takeProfit?String(t.takeProfit):'',shares:String(t.shares),commission:t.commission?String(t.commission):'',setup:t.setup||'VWAP Bounce',notes:t.notes||'',emotion:t.emotion||5,tags:t.tags||'',screenshot:t.screenshot||''})}
+    else{setEditTrade(null);setTf({date:new Date().toISOString().slice(0,16),symbol:'',direction:'LONG',entryPrice:'',exitPrice:'',stopLoss:'',takeProfit:'',shares:'100',commission:'',setup:'',notes:'',emotion:5,tags:'',screenshot:''})}
     setTradeOpen(true)
   }
 
@@ -352,7 +352,7 @@ export default function Home(){
     const token=getStore<string>('tv_token','')
     if(!token){showToast('Token no encontrado, vuelve a iniciar sesion');return}
     const headers={'Content-Type':'application/json','Authorization':`Bearer ${token}`}
-    const payload={date:tf.date,symbol:tf.symbol,direction:tf.direction,entryPrice:ep,exitPrice:xp,stopLoss:tf.stopLoss?parseFloat(tf.stopLoss):null,takeProfit:tf.takeProfit?parseFloat(tf.takeProfit):null,shares:sh,setup:tf.setup,notes:tf.notes,emotion:tf.emotion,tags:tf.tags,screenshot:tf.screenshot||null}
+    const payload={date:tf.date,symbol:tf.symbol,direction:tf.direction,entryPrice:ep,exitPrice:xp,stopLoss:tf.stopLoss?parseFloat(tf.stopLoss):null,takeProfit:tf.takeProfit?parseFloat(tf.takeProfit):null,shares:sh,commission:tf.commission?parseFloat(tf.commission):null,setup:tf.setup,notes:tf.notes,emotion:tf.emotion,tags:tf.tags,screenshot:tf.screenshot||null}
     try{
       if(editTrade&&editTrade._dbId){
         const res=await fetch(`/api/trades/${editTrade._dbId}`,{method:'PUT',headers,body:JSON.stringify(payload)})
@@ -884,10 +884,11 @@ export default function Home(){
                 <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Take Profit</label><input type="number" value={tf.takeProfit} onChange={e=>setTf(p=>({...p,takeProfit:e.target.value}))} placeholder="Opcional" className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
               </div>
 
-              {/* Shares y Setup */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1"><label className="flex items-center gap-2 text-zinc-300 text-xs font-medium">Shares (Cantidad)</label><input type="number" step="any" placeholder="0.00" value={tf.shares} onChange={e=>{const val=e.target.value.replace(',','.');setTf(p=>({...p,shares:val}))}} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white mt-1 outline-none focus:border-[#e31937] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
-                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Setup</label><Input list="setups-list" value={tf.setup} onChange={e=>setTf(p=>({...p,setup:e.target.value}))} className="bg-[#1a1a1a] border-[#333] h-9 text-sm text-white focus:border-[#e31937] outline-none transition-colors" placeholder="Escribe o elige..."/><datalist id="setups-list">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist></div>
+              {/* Shares, Comisión y Setup */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="flex flex-col gap-1"><label className="flex items-center gap-2 text-zinc-300 text-xs font-medium">Shares (Cantidad)</label><input type="number" step="any" placeholder="0.00" value={tf.shares} onChange={e=>{const val=e.target.value.replace(",",".");setTf(p=>({...p,shares:val}))}} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white mt-1 outline-none focus:border-[#e31937] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
+                <div className="flex flex-col gap-1"><label className="flex items-center gap-2 text-zinc-300 text-xs font-medium">Comisión ($)</label><input type="number" step="any" placeholder="0.00" value={tf.commission} onChange={e=>{const val=e.target.value.replace(",",".");setTf(p=>({...p,commission:val}))}} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white mt-1 outline-none focus:border-[#e31937] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
+                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Setup</label><Input list="setups-list" value={tf.setup} onChange={e=>setTf(p=>({...p,setup:e.target.value}))} className="bg-[#1a1a1a] border border-[#333] h-9 text-sm text-white focus:border-[#e31937] outline-none transition-colors" placeholder="Escribe o elige..."/><datalist id="setups-list">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist></div>
               </div>
 
               {/* Emocion Slider */}
