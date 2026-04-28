@@ -31,6 +31,35 @@ function mapTrade(row: Record<string, unknown>) {
   }
 }
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const token = request.headers.get('Authorization')?.replace('Bearer ', '')
+    if (!token) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    }
+
+    const decoded = verifyToken(token)
+    if (!decoded) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+    }
+
+    const { id } = await params
+
+    const trade = db.prepare('SELECT * FROM trades WHERE id = ? AND user_id = ?').get(id, decoded.userId) as Record<string, unknown> | undefined
+    if (!trade) {
+      return NextResponse.json({ error: 'Trade no encontrado' }, { status: 404 })
+    }
+
+    return NextResponse.json({ trade: mapTrade(trade) })
+  } catch (error) {
+    console.error('Get trade error:', error)
+    return NextResponse.json({ error: 'Error al obtener trade' }, { status: 500 })
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

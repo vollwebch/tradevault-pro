@@ -26,3 +26,18 @@ Stage Summary:
 - Sistema de autenticación completamente funcional con SQLite + bcryptjs + JWT
 - Todas las APIs probadas y funcionando correctamente
 - Proyecto subido a GitHub exitosamente
+
+---
+Task ID: 2
+Agent: Main
+Task: Fix 500 error on GET /api/trades/[id] + verify screenshot viewer
+
+Work Log:
+- Identified missing GET handler in /api/trades/[id]/route.ts (only had PUT and DELETE)
+- Added GET handler with auth verification and trade lookup by UUID + user_id
+- Verified screenshot viewer already works in Bitácora: thumbnail on trade card, full-size modal on click
+- Rebuilt and restarted server successfully
+
+Stage Summary:
+- GET /api/trades/[id] now returns 200 with trade data instead of 500
+- Screenshots display correctly in Bitácora section (thumbnail + fullscreen modal)
