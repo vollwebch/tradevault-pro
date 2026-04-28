@@ -33,6 +33,23 @@ function fmtDate(d:string){return new Date(d).toLocaleDateString('es-US',{month:
 function fmtDateShort(d:string){return new Date(d).toLocaleDateString('es-US',{month:'short',day:'numeric'})}
 const COLORS=['#00c853','#e31937','#00d4ff','#a855f7','#f59e0b','#ff6b00','#14b8a6','#ef4444']
 
+/* ─── IMAGE COMPRESSOR ─── */
+function compressImage(file:File,maxW=800,maxH=800,quality=0.5):Promise<string>{
+  return new Promise((resolve)=>{
+    const img=new Image()
+    img.onload=()=>{
+      const canvas=document.createElement('canvas')
+      let w=img.width,h=img.height
+      if(w>maxW||h>maxH){const r=Math.min(maxW/w,maxH/h);w=Math.round(w*r);h=Math.round(h*r)}
+      canvas.width=w;canvas.height=h
+      const ctx=canvas.getContext('2d')!
+      ctx.drawImage(img,0,0,w,h)
+      resolve(canvas.toDataURL('image/jpeg',quality))
+    }
+    img.src=URL.createObjectURL(file)
+  })
+}
+
 /* ─── STATS CALCULATOR ─── */
 function calcStats(trades:Trade[],period?:string){
   let t=[...trades]
@@ -864,7 +881,7 @@ export default function Home(){
               <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Tags (separados por coma)</label><input value={tf.tags} onChange={e=>setTf(p=>({...p,tags:e.target.value}))} placeholder="ej: gap, vwap, momentum" className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
 
               {/* Upload Imagen */}
-              <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Captura de Pantalla</label>{tf.screenshot?<div className="relative mt-1"><img src={tf.screenshot} alt="preview" className="w-full max-h-32 object-cover rounded-lg border border-[#333]"/><button onClick={()=>setTf(p=>({...p,screenshot:''}))} className="absolute top-1 right-1 bg-black/70 rounded-full p-1 text-white hover:bg-[#e31937] transition-colors"><X size={14}/></button></div>:<label className="flex items-center justify-center gap-2 px-3 py-4 rounded-lg border border-dashed border-[#333] hover:border-[#555] cursor-pointer transition-colors group"><Upload size={16} className="text-zinc-400 group-hover:text-white"/><span className="text-sm text-zinc-400 group-hover:text-white">Subir imagen</span><input type="file" accept="image/*" className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f){const r=new FileReader();r.onload=()=>setTf(p=>({...p,screenshot:r.result as string}));r.readAsDataURL(f)}}}/></label>}</div>
+              <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Captura de Pantalla</label>{tf.screenshot?<div className="relative mt-1"><img src={tf.screenshot} alt="preview" className="w-full max-h-32 object-cover rounded-lg border border-[#333]"/><button onClick={()=>setTf(p=>({...p,screenshot:''}))} className="absolute top-1 right-1 bg-black/70 rounded-full p-1 text-white hover:bg-[#e31937] transition-colors"><X size={14}/></button></div>:<label className="flex items-center justify-center gap-2 px-3 py-4 rounded-lg border border-dashed border-[#333] hover:border-[#555] cursor-pointer transition-colors group"><Upload size={16} className="text-zinc-400 group-hover:text-white"/><span className="text-sm text-zinc-400 group-hover:text-white">Subir imagen</span><input type="file" accept="image/*" className="hidden" onChange={async e=>{const f=e.target.files?.[0];if(f){const compressed=await compressImage(f);setTf(p=>({...p,screenshot:compressed}))}}}/></label>}</div>
 
               {/* Footer Buttons */}
               <div className="flex gap-2 pt-4">
