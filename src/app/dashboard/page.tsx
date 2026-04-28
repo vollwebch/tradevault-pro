@@ -347,7 +347,7 @@ export default function Home(){
 
   const saveTrade=async()=>{
     if(!tf.date||!tf.entryPrice||!tf.exitPrice||!tf.shares){showToast('Completa los campos requeridos');return}
-    const ep=parseFloat(tf.entryPrice),xp=parseFloat(tf.exitPrice),sh=parseInt(tf.shares)
+    const ep=parseFloat(tf.entryPrice),xp=parseFloat(tf.exitPrice),sh=parseFloat(tf.shares)
     if(isNaN(ep)||isNaN(xp)||isNaN(sh)){showToast('Valores numericos invalidos');return}
     const token=getStore<string>('tv_token','')
     if(!token){showToast('Token no encontrado, vuelve a iniciar sesion');return}
@@ -886,7 +886,7 @@ export default function Home(){
 
               {/* Shares y Setup */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Shares</label><input type="number" value={tf.shares} onChange={e=>setTf(p=>({...p,shares:e.target.value}))} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white outline-none focus:border-[#e31937] transition-colors"/></div>
+                <div className="flex flex-col gap-1"><label className="flex items-center gap-2 text-zinc-300 text-xs font-medium">Shares (Cantidad)</label><input type="number" step="any" placeholder="0.00" value={tf.shares} onChange={e=>{const val=e.target.value.replace(',','.');setTf(p=>({...p,shares:val}))}} className="w-full bg-[#1a1a1a] border border-[#333] rounded-md h-9 px-3 text-sm text-white mt-1 outline-none focus:border-[#e31937] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
                 <div className="flex flex-col gap-1"><label className="text-zinc-300 text-xs font-medium">Setup</label><Input list="setups-list" value={tf.setup} onChange={e=>setTf(p=>({...p,setup:e.target.value}))} className="bg-[#1a1a1a] border-[#333] h-9 text-sm text-white focus:border-[#e31937] outline-none transition-colors" placeholder="Escribe o elige..."/><datalist id="setups-list">{DEFAULT_SETUPS.map(s=><option key={s} value={s}/>)}</datalist></div>
               </div>
 
