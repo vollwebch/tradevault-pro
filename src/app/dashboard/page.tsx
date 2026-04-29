@@ -936,14 +936,11 @@ export default function Home(){
                   <input type="number" step="any" placeholder="0.00" value={tf.brokerFees} onChange={e=>{const val=e.target.value.replace(",",".");setTf(p=>({...p,brokerFees:val}))}} className="w-20 bg-[#1a1a1a] border border-[#444] rounded px-2 py-0.5 text-right text-white outline-none focus:border-[#e31937] text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
                 </div>
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-zinc-400">Profit Split (Prop Firm):</span>
-                  <select value={tf.profitSplit} onChange={e=>setTf(p=>({...p,profitSplit:e.target.value}))} className="bg-[#1a1a1a] border border-[#444] rounded px-2 py-0.5 text-white outline-none text-xs">
-                    <option value="100">100% (Examen)</option>
-                    <option value="90">90% (Fondeado)</option>
-                    <option value="85">85% (Fondeado)</option>
-                    <option value="80">80% (Fondeado)</option>
-                    <option value="75">75% (Fondeado)</option>
-                  </select>
+                  <span className="text-zinc-400">Profit Split:</span>
+                  <div className="flex items-center gap-1">
+                    <input type="number" step="any" placeholder="100" value={tf.profitSplit} onChange={e=>{let v=e.target.value.replace(",",".");if(v&&parseFloat(v)>100)v='100';if(v&&parseFloat(v)<0)v='0';setTf(p=>({...p,profitSplit:v}))}} className="w-14 bg-[#1a1a1a] border border-[#444] rounded px-2 py-0.5 text-right text-white outline-none focus:border-[#e31937] text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
+                    <span className="text-zinc-500">%</span>
+                  </div>
                 </div>
                 </>}
                 <hr className="border-[#333] my-1"/>
