@@ -85,91 +85,96 @@ function calcStats(trades:Trade[],period?:string){
 /* ─── COURSE MODULES (15) ─── */
 const MODULES=[
 {id:'m1',title:'Module 1: Tesla como Instrumento de Trading',icon:'⚡',color:'#e31937',subtitle:'Por que Tesla es diferente a cualquier otra accion',content:[
-{heading:'Por que Tesla es el Rey del Scalping',text:'Tesla (TSLA) no es una accion normal. Combina alta volatilidad, volumen masivo y movimiento constante. Mientras el SPY se mueve 0.5% en un dia, Tesla puede moverse 3-8%. Promedia 50-80 millones de acciones negociadas por dia, dando liquidez absoluta. La volatilidad diaria (ATR) es de 4-7 dolares, representando 2-4% diarios, 3-5 veces mas que el S&P 500.'},
-{heading:'Factores que Mueven el Precio',text:'Tesla responde a: (1) Tuits de Elon Musk - un solo tweet puede mover 2-10%. (2) Datos de entregas trimestrales - gaps de 5-15%. (3) Earnings reports - en enero, abril, julio y octubre. (4) Cambios en politicas de incentivos EV. (5) Anuncios de nuevos modelos. (6) Datos macro del sector automotriz. Como scalper, debes saber cuando ocurren porque cambian el comportamiento del precio.'},
-{heading:'Perfil de Volatilidad por Hora',text:'Pre-market (4-9:30 ET): volumen bajo, alta volatilidad. Apertura (9:30-10 ET): hora MAS volatil, 2-5%. Manana (10-12 ET): tendencia se establece. Mediodia (12-14 ET): "Lunch lull", PEOR momento. Tarde (14-15:30 ET): volumen regresa, breakouts genuinos. Cierre (15:30-16 ET): alta volatilidad institucional.'},
-{heading:'Estadisticas Clave',text:'Rango diario: $4.50-$7.00 (2.5-4%). Gap up promedio: +1.8%. Gap down: -2.1%. Probabilidad gap fill parcial: 62%. Beta vs S&P: 2.1. Movimientos intradia > 3%: 3-4 veces/semana.'}
+{heading:'Por que Tesla es el Rey del Scalping',text:'Tesla (TSLA) no es una accion normal. Es un vehiculo de trading unico que combina alta volatilidad, volumen masivo y movimiento constante. Mientras que el SPY se mueve 0.5% en un dia, Tesla puede moverse 3-8% en una sola sesion. Esto significa que como scalper, tienes MUCHAS mas oportunidades de entrada y salida durante el dia. Tesla promedia entre 50-80 millones de acciones negociadas por dia, lo que te da liquidez absoluta para entrar y salir posiciones en cualquier momento sin slippage significativo. La volatilidad promedio diaria (ATR) de Tesla es de 4-7 dolares en terminos de precio, lo que en porcentaje representa movimientos de 2-4% diarios. Esto es 3-5 veces mas que el promedio del S&P 500.'},
+{heading:'El ADN de Tesla: Factores que Mueven el Precio',text:'Tesla responde a multiples catalizadores que debes conocer: (1) Tuites de Elon Musk - un solo tweet puede mover la accion 2-10% en minutos, especialmente temas de autonomia, nueva tecnologia, o datos de entregas. (2) Datos de entregas trimestrales - publicados los primeros dias de cada trimestre, causan movimientos gap de 5-15%. (3) Earnings reports - Tesla reporta earnings en enero, abril, julio y octubre. Las horas previas y posteriores son de EXTREMA volatilidad. (4) Cambios en politicas de incentivos para EVs en China, Europa y EEUU. (5) Anuncios de nuevos modelos (Model 2, Cybertruck updates, Robotaxi). (6) Datos macro del sector automotriz y competencia (BYD, Rivian, Ford). Como scalper, no necesitas analizar todos estos fundamentalmente, pero DEBES saber cuando ocurren porque cambian el comportamiento del precio completamente.'},
+{heading:'Perfil de Volatilidad de Tesla por Hora del Dia',text:'Los patrones intradia de Tesla son predecibles: (1) Pre-market (4:00-9:30 ET): Volumen bajo pero alta volatilidad por noticias. Movimientos de 1-3% son comunes con poco volumen. (2) Apertura (9:30-10:00 ET): La hora MAS volatil. Tesla puede mover 2-5% en los primeros 30 minutos. VWAP se establece aqui. (3) Manana (10:00-12:00 ET): Tendencia se establece. Buen momento para swing trades cortos. ADX suele dar las lecturas mas claras. (4) Mediodia (12:00-14:00 ET): "Lunch lull" - volumen baja, rangos se estrechan. PEOR momento para scalping. False breakouts son comunes. (5) Tarde (14:00-15:30 ET): Volumen regresa. Breakouts del rango del mediodia suelen ser genuinos. (6) Cierre (15:30-16:00 ET): Alta volatilidad por cierre de posiciones institucionales.'},
+{heading:'Estadisticas Clave de Tesla que Debes Saber',text:'Datos historicos que todo trader de Tesla debe memorizar: Rango promedio diario: $4.50-$7.00 (2.5-4% del precio). Gap up promedio: +1.8%. Gap down promedio: -2.1%. Probabilidad de gap fill (parcial): 62%. Probabilidad de gap fill (completo): 38%. Promedio de movimientos intradia > 3%: 3-4 veces por semana. Dias rojos vs verdes: aproximadamente 52% verdes vs 48% rojos. Volatilidad post-earnings: promedio de movimiento de 8-12% en las 24 horas posteriores. El beta de Tesla vs S&P 500 es de aproximadamente 2.1, lo que significa que se mueve el doble que el mercado en cualquier direccion.'}
 ]},
-{id:'m2',title:'Module 2: Historial de Precios y Patrones',icon:'📊',color:'#00d4ff',subtitle:'Decadas de datos destilados en conocimiento',content:[
-{heading:'Historia Completa del Precio',text:'Tesla IPO en junio 2010 a $17 (ajustado ~$1.13). De $17 a $265 en 2020, split 5:1 en agosto 2020, llegando a $414 post-split en noviembre 2021. Desde ATH noviembre 2021, corrigio 73% hasta $101 en enero 2023, luego recupero a $299 en julio 2024.'},
-{heading:'Niveles Criticos',text:'Resistencia mayor: $350. Resistencia intermedia: $300. Soporte intermedio: $200. Soporte mayor: $150. Nivel critico: $100. Para scalping 1-min: VWAP del dia y High/Low del dia anterior.'},
-{heading:'Patrones Repetitivos',text:'(1) Gap and Trap: 40% de las veces. (2) VWAP Grab: en tendencia fuerte. (3) Afternoon Reversal: entre 2-3 PM ET. (4) Earnings Volatility Squeeze: pre-earnings comprime, post explota.'},
-{heading:'Analisis Estacional',text:'Q1: generalmente debil. Q2: earnings de abril dan direccion. Q3: julio debil, septiembre el peor mes. Q4: trimestre MAS fuerte, entregas Q4 son las mas altas.'}
+{id:'m2',title:'Module 2: Historial de Precios y Patrones',icon:'📊',color:'#00d4ff',subtitle:'Decadas de datos destilados en conocimiento accionable',content:[
+{heading:'La Historia Completa de Tesla en el Precio',text:'Tesla salio a bolsa en junio de 2010 a $17 por accion (ajustado por splits seria ~$1.13). El recorrido ha sido espectacular: de $17 a $265 en 2020 (pre-split), luego el split 5:1 en agosto 2020, llegando a $414 por accion post-split (~$2070 pre-split equivalente) en noviembre 2021. Desde el ATH de noviembre 2021, Tesla corrijo un 73% hasta los $101 en enero 2023. Luego recupero hasta los $299 en julio 2024.'},
+{heading:'Niveles Criticos de Soporte y Resistencia',text:'Basado en el analisis historico reciente (2023-2026), Tesla tiene estos niveles clave: Resistencia mayor: $350 (doble top historico). Resistencia intermedia: $300 (nivel psicologico). Soporte intermedio: $200 (zona de valor institucional). Soporte mayor: $150 (zona de acumulacion). Nivel critico: $100 (soporte historico absoluto). Para scalping en 1-min, los niveles intradia mas importantes son: VWAP del dia, High/Low del dia anterior.'},
+{heading:'Patrones de Precio que se Repiten en Tesla',text:'(1) Gap and Trap: Tesla abre en gap, los retail entran, y el precio revierte. Ocurre ~40% de las veces. (2) VWAP Grab: En dias de tendencia fuerte, Tesla se pega al VWAP como un iman. (3) Afternoon Reversal: Tesla tiene tendencia a revertir entre 2:00-3:00 PM ET. (4) Earnings Volatility Squeeze: Antes de earnings la volatilidad se comprime y post-earnings explota.'},
+{heading:'Analisis Estacional de Tesla',text:'Q1 (Enero-Marzo): Generalmente debil. Enero es el mas volatil. Q2 (Abril-Junio): Earnings de abril dan direction. Q3 (Julio-Septiembre): Julio debil, Septiembre el peor mes. Q4 (Octubre-Diciembre): El trimestre MAS fuerte. Entregas Q4 son las mas altas.'}
 ]},
-{id:'m3',title:'Module 3: Indicadores Optimizados para Tesla',icon:'🎯',color:'#00ff88',subtitle:'Configuraciones exactas para TSLA en 1-min',content:[
-{heading:'INDICADOR #1: VWAP',text:'Precio promedio ponderado por volumen. EL indicador institucional. REGLAS: Precio arriba = sesgo alcista. Precio abajo = sesgo bajista. Cruce con volumen = cambio de sesgo. Tesla revierte desde bandas 2 desviaciones en 72% de las veces.'},
-{heading:'INDICADOR #2: Bollinger Bands (20,2)',text:'PERFECTAS para volatilidad extrema. Squeeze = explosion inminente. Touch banda sup + RSI > 70 = venta. Touch banda inf + RSI < 30 = compra. Bandwidth < 0.5% = squeeze extremo.'},
-{heading:'INDICADOR #3: Volumen',text:'Todo breakout DEBE confirmarse con volumen > promedio. Volume Profile identifica Point of Control. Climax volumen (3x+ promedio) = punto de giro probable.'},
-{heading:'Setup Completo (7 Indicadores)',text:'(1) VWAP + Bandas. (2) EMA 9 tendencia inmediata. (3) EMA 21 confirma tendencia. (4) EMA 45 soporte dinamico. (5) RSI(9) mas rapido. (6) MACD(6,12,6) perfecto TSLA. (7) BB(20,2) squeezes y extremos.'}
+{id:'m3',title:'Module 3: Indicadores Optimizados para Tesla',icon:'🎯',color:'#00ff88',subtitle:'Configuraciones exactas probadas para TSLA en 1-minuto',content:[
+{heading:'INDICADOR #1 OBLIGATORIO: VWAP',text:'El VWAP es el precio promedio ponderado por volumen. Es EL indicador que las instituciones usan. Tesla lo respeta excepcionalmente. REGLAS: (1) Precio arriba del VWAP = sesgo alcista. (2) Precio abajo = sesgo bajista. (3) Cruce del VWAP con volumen = cambio de sesgo. (4) Tesla revierte desde las bandas de 2 desviaciones en 72% de las veces.'},
+{heading:'INDICADOR #2 OBLIGATORIO: Bollinger Bands (20,2)',text:'PERFECTAS para la volatilidad extrema de Tesla. REGLAS: (1) Bollinger Squeeze = explosion inminente. (2) Touch banda superior + RSI > 70 = senal de venta corta. (3) Touch banda inferior + RSI < 30 = senal de compra. (4) Bandwidth < 0.5% = squeeze extremo.'},
+{heading:'INDICADOR #3 OBLIGATORIO: Volumen',text:'El volumen es la VERDAD del mercado. REGLAS: (1) Todo breakout DEBE confirmarse con volumen > promedio. (2) Volume Profile: Identifica "Point of Control". (3) Climax de volumen (3x+ promedio) = punto de giro probable.'},
+{heading:'Tu Setup Optimizado Completo (7 Indicadores)',text:'(1) VWAP + Bandas - Define sesgo y niveles. (2) EMA 9 - Tendencia inmediata. (3) EMA 21 - Confirma tendencia. (4) EMA 45 - Soporte dinamico. (5) RSI(9) - Mas rapido que RSI(14). (6) MACD(6,12,6) - Perfecto para TSLA. (7) Bollinger Bands(20,2) - Squeezes y extremos.'}
 ]},
-{id:'m4',title:'Module 4: Setups de Scalping 1-Minuto',icon:'🔥',color:'#ff6b00',subtitle:'Estrategias paso a paso para Webull',content:[
-{heading:'Setup #1: VWAP Bounce (WR: 62-68%)',text:'Espera post-apertura (9:45+). Identifica sesgo VWAP. Espera pullback al VWAP. Verifica RSI, MACD, volumen. Target: banda VWAP 1 desviacion. Stop: 10-15c del VWAP. R:R 1:1.5 a 1:2.'},
-{heading:'Setup #2: Bollinger Squeeze (WR: 55-60%)',text:'Identifica squeeze (bandas estrechas 20+ velas). Espera breakout con volumen > 1.5x. Target: distancia del squeeze. Stop: banda opuesta. R:R 1:2 a 1:3.'},
-{heading:'Setup #3: EMA Cross + VWAP (WR: 58-64%)',text:'EMA 9 cruza EMA 21 = senal. FILTRO: precio del lado correcto del VWAP. Target: proximo S/R intradia. Stop: debajo/encima EMA 45.'},
-{heading:'Setup #4: Gap Fill (WR: 55-62%)',text:'Gaps < 1% se llenan 65% del tiempo. Espera 15-30 min. Target: 50-100% del gap. A las 10:30 si no empezo a llenarse, ABANDONA.'},
-{heading:'Setup #5: Reversal S/R (WR: 52-58%)',text:'Marca high/low del dia a las 10:30. Precio regresa al high + RSI > 75 + volumen bajando = corta. Target: VWAP del dia.'}
+{id:'m4',title:'Module 4: Setups de Scalping 1-Minuto',icon:'🔥',color:'#ff6b00',subtitle:'Estrategias paso a paso que puedes usar AHORA en Webull',content:[
+{heading:'Setup #1: VWAP Bounce (WR: 62-68%)',text:'PASOS: (1) Espera post-apertura (9:45-10:00 ET minimo). (2) Identifica sesgo: arriba VWAP = largos, abajo = cortos. (3) Espera pullback al VWAP. (4) Verifica: RSI no extremo, MACD alineado, volumen > promedio. (5) Target: banda VWAP 1 desviacion. (6) Stop: 10-15 centavos del VWAP. R:R 1:1.5 a 1:2. Ocurre 3-8 veces por dia.'},
+{heading:'Setup #2: Bollinger Squeeze Breakout (WR: 55-60%)',text:'PASOS: (1) Identifica squeeze (bandas estrechas 20+ velas). (2) Espera breakout con volumen > 1.5x promedio. (3) Target: distancia del squeeze. (4) Stop: banda opuesta. R:R 1:2 a 1:3.'},
+{heading:'Setup #3: EMA Ribbon Cross + VWAP (WR: 58-64%)',text:'EMA 9 cruza EMA 21 = senal. FILTRO CRITICO: precio del lado correcto del VWAP. Target: proximo S/R intradia. Stop: debajo/encima EMA 45.'},
+{heading:'Setup #4: Gap Fill Scalp (WR: 55-62%)',text:'Gaps < 1% se llenan 65% del tiempo. Espera 15-30 min tras apertura. Target: 50-100% del gap. A las 10:30 ET si no empezo a llenarse, ABANDONA.'},
+{heading:'Setup #5: Reversal S/R Intradia (WR: 52-58%)',text:'Marca high/low del dia a las 10:30 ET. Precio regresa al high + RSI > 75 + volumen bajando = corta. NECESITAS confirmacion de vela. Target: VWAP del dia.'}
 ]},
-{id:'m5',title:'Module 5: Secretos de Rentabilidad',icon:'💎',color:'#a855f7',subtitle:'Lo que el 95% no sabe',content:[
-{heading:'Los Primeros 30 Minutos Definen el Dia',text:'9:30-10 ET define la sesion. Tesla abre fuerte + VWAP soporte = LARGOS todo el dia. Rango estrecho (< $1) = dia de RANGO. Movimiento fuerte (> $2) = dia de TENDENCIA.'},
-{heading:'Tesla Respeta Niveles de Opcion',text:'Viernes OpEx: gravita al max pain. Strikes con mayor OI = imanes. Gamma squeeze: market makers compran para cubrir, causando movimientos explosivos.'},
-{heading:'El Power Hour (3-4 PM ET)',text:'Volumen 40-60% mayor. Breakouts post-3 PM son 70% genuinos. EVITA 3:45-4 PM: manipulacion puede revertir todo.'},
-{heading:'Las 3 Reglas de Oro',text:'#1 NUNCA operes contra VWAP en primeros 60 min. #2 R:R minimo 1:1.5. #3 DIAS DE RANGO = NO uses estrategia de tendencia.'}
+{id:'m5',title:'Module 5: Secretos de Rentabilidad',icon:'💎',color:'#a855f7',subtitle:'Lo que el 95% de los traders de Tesla NO saben',content:[
+{heading:'Secreto #1: Los Primeros 30 Minutos Definen el Dia',text:'9:30-10:00 ET define toda la sesion. Tesla abre fuerte + VWAP soporte = LARGOS todo el dia. Rango estrecho (< $1) = dia de RANGO. Movimiento fuerte (> $2) = dia de TENDENCIA.'},
+{heading:'Secreto #2: Tesla Respeta los Niveles de Opcion',text:'Viernes OpEx: Tesla gravita al "max pain". Strikes redondos con mayor OI = imanes. "Gamma squeeze": market makers compran acciones para cubrir opciones, causando movimientos explosivos.'},
+{heading:'Secreto #3: El Power Hour (3:00-4:00 PM ET)',text:'Volumen 40-60% mayor que el resto del dia. Breakouts post-3 PM son 70% genuinos. EVITA 3:45-4:00 PM: manipulacion puede revertir todo.'},
+{heading:'Las 3 Reglas de Oro',text:'#1 NUNCA operes contra el VWAP en los primeros 60 minutos. #2 Tu mejor amigo es el R:R. Minimo 1:1.5. #3 DIAS DE RANGO = NO uses estrategia de tendencia. Los rentables NO operan todos los dias.'}
 ]},
-{id:'m6',title:'Module 6: Gestion de Riesgo',icon:'🛡️',color:'#ff3366',subtitle:'Sin esto, nada importa',content:[
-{heading:'Position Size',text:'Formula: Shares = (Capital x Riesgo%) / (Distancia al Stop). Ejemplo: $25,000, 1% = $250. Stop $0.50 = 500 shares max. Maximo 5% del capital por dia.'},
-{heading:'Stop Loss',text:'Stop TECNICO: debajo VWAP, debajo EMA 45, 5-10c bajo low vela entrada. Stop de tiempo: si no se mueve en 5-10 min, sal. NUNCA muevas stop ALEJANDO riesgo.'},
-{heading:'Take Profit por Tiers',text:'Tier 1: 50% posicion en 1:1 R:R. Tier 2: 30% en 1:2 R:R. Runner: 20% con trailing stop a breakeven.'},
-{heading:'El Diario de Trading',text:'OBLIGATORIO. Registra: fecha/hora, setup, direccion, precios, resultado, captura, emocion 1-10. Traders con diario mejoran 30-50% mas rapido.'}
+{id:'m6',title:'Module 6: Gestion de Riesgo Profesional',icon:'🛡️',color:'#ff3366',subtitle:'Sin esto, nada de lo anterior importa',content:[
+{heading:'Calculo de Position Size',text:'Formula: Shares = (Capital x Riesgo%) / (Distancia al Stop). Ejemplo: Capital $25,000, Riesgo 1% = $250. Stop $0.50 = 500 acciones maximo. Maximo 5% del capital por dia.'},
+{heading:'Donde Colocar Stop Loss',text:'Stop TECNICO: Debajo VWAP, debajo EMA 45, 5-10c bajo low de vela de entrada. Stop de tiempo: si no se mueve en 5-10 min, sal. NUNCA muevas stop ALEJANDO riesgo.'},
+{heading:'Take Profit: Sistema por Tiers',text:'(1) Tier 1: 50% posicion en 1:1 R:R. (2) Tier 2: 30% en 1:2 R:R. (3) Runner: 20% con trailing stop a breakeven.'},
+{heading:'El Diario de Trading',text:'OBLIGATORIO. Registra: fecha/hora, setup, direccion, precios, resultado, captura, estado emocional 1-10. Traders con diario mejoran 30-50% mas rapido.'}
 ]},
 {id:'m7',title:'Module 7: Psicologia del Trader',icon:'🧠',color:'#14b8a6',subtitle:'El 80% del trading es mental',content:[
-{heading:'FOMO: El Error #1',text:'Tesla genera MAS FOMO que cualquier accion. Trades por FOMO = WR solo 28-35% vs 58-65% con setup. Perdiste un movimiento = el proximo NO es tuyo.'},
-{heading:'Tilt: Cuando Pierdes el Control',text:'2 perdidas seguidas = 30 min descanso. 3 perdidas = DIA TERMINADO. Max daily loss 3-5% = dia acabado.'},
-{heading:'Mentalidad del Scalper Rentable',text:'Piensa en PROBABILIDADES. Acepta perdidas como costo. Enfocate en PROCESO. PACIENCIA. Consistencia es ABURRIDA y esta bien.'}
+{heading:'FOMO: El Error #1',text:'Tesla genera MAS FOMO que cualquier accion. Trades por FOMO = WR solo 28-35% vs 58-65% con setup. REGLAS: Perdiste un movimiento = el proximo NO es tuyo.'},
+{heading:'Tilt: Cuando Pierdes el Control',text:'ANTI-TILT: 2 perdidas seguidas = 30 min descanso. 3 perdidas = DIA TERMINADO. Max daily loss 3-5% = dia acabado.'},
+{heading:'Mentalidad del Scalper Rentable',text:'(1) Piensa en PROBABILIDADES. (2) Acepta perdidas como costo. (3) Enfocate en PROCESO, no resultado. (4) PACIENCIA para esperar setup. (5) Consistencia es ABURRIDA y eso esta bien.'}
 ]},
-{id:'m8',title:'Module 8: Errores Fatales',icon:'💀',color:'#dc2626',subtitle:'Errores que destruyen cuentas',content:[
-{heading:'Error #1: Operar Todas las Horas',text:'OPTIMO: 9:30-10:30, 10:30-11:30, 14:00-15:30 ET. EVITAR: 12-14 ET (lunch lull). MAXIMO 2-3 horas/dia.'},
-{heading:'Error #2: Averaging Down',text:'NUNCA promedies posicion perdedora. Si stop se toca, SAL. Maximo 2 adiciones. Perdida maxima por idea = 1% capital.'},
-{heading:'Error #3: Ignorar Contexto',text:'SPY en tendencia fuerte = Tesla sigue 70%. Dias CPI, NFP, FOMC = NO operes durante evento.'},
+{id:'m8',title:'Module 8: Errores Fatales',icon:'💀',color:'#dc2626',subtitle:'Los errores que destruyen cuentas',content:[
+{heading:'Error #1: Operar Todas las Horas',text:'OPTIMO: 9:30-10:30 ET, 10:30-11:30 ET, 14:00-15:30 ET. EVITAR: 12:00-14:00 ET (lunch lull). MAXIMO 2-3 horas/dia.'},
+{heading:'Error #2: Averaging Down',text:'NUNCA promedies posicion perdedora en 1-min. Si stop se toca, SAL. Maximo 2 adiciones. Perdida maxima por idea = 1% del capital.'},
+{heading:'Error #3: Ignorar Contexto del Mercado',text:'SPY en tendencia fuerte = Tesla sigue 70%. Dias CPI, NFP, FOMC = NO operes durante evento. Espera 15-30 min.'},
 {heading:'Error #4: Overtrading',text:'MAXIMO 5-8 trades/dia. > 10 trades = WR cae a 35-42%. Los mejores toman 3-5 trades de ALTA calidad.'}
 ]},
 {id:'m9',title:'Module 9: Plan de Accion Diario',icon:'📋',color:'#f59e0b',subtitle:'Tu checklist antes de tocar Webull',content:[
-{heading:'Pre-Market (8:30-9:30 ET)',text:'(1) Noticias Tesla overnight. (2) Pre-market price. (3) Niveles dia anterior. (4) Calendario economico. (5) SPY futures. (6) Define plan. (7) Revisa diario ayer. (8) Estado mental.'},
-{heading:'Checklist de Entrada',text:'(1) Precio lado correcto VWAP? (2) Setup coincide? (3) EMAs alineadas? (4) RSI/MACD confirman? (5) Volumen > promedio? (6) Stop/target claros? (7) R:R min 1:1.5? (8) Sin tilt?'},
-{heading:'Post-Session Review',text:'(1) Registra CADA trade. (2) Capturas. (3) Metricas. (4) Mejor/peor trade. (5) Emociones. (6) APAGA computadora.'}
+{heading:'Pre-Market Routine (8:30-9:30 ET)',text:'(1) Revisa noticias Tesla overnight. (2) Mira pre-market. (3) Niveles dia anterior. (4) Calendario economico. (5) SPY futures. (6) Define plan. (7) Revisa diario de ayer. (8) Estado mental.'},
+{heading:'Checklist de Entrada',text:'(1) Precio del lado correcto del VWAP? (2) Setup coincide? (3) EMAs alineadas? (4) RSI y MACD confirman? (5) Volumen > promedio? (6) Stop y target claros? (7) R:R min 1:1.5? (8) Sin tilt/FOMO?'},
+{heading:'Post-Session Review',text:'(1) Registra CADA trade. (2) Capturas de pantalla. (3) Metricas. (4) Mejor/peor trade. (5) Emociones del dia. (6) APAGA computadora.'}
 ]},
 {id:'m10',title:'Module 10: Tipos de Ordenes en Webull',icon:'📌',color:'#3b82f6',subtitle:'Saber CUANDO usar cada orden',content:[
-{heading:'Market Order',text:'NUNCA en scalping TSLA 1-min. Slippage 1-5c. Solo en movimiento explosivo que necesita entrada inmediata.'},
-{heading:'Limit Order',text:'TU ORDEN PRINCIPAL (90%+ trades). Se ejecuta SOLO a tu precio. Ideal para entradas precisas sin slippage.'},
-{heading:'Stop Order',text:'STOP LOSS PRINCIPAL. Se convierte en MARKET al tocar tu nivel. Riesgo: slippage 2-5c en alta volatilidad.'},
-{heading:'Trailing Stop',text:'EL MEJOR AMIGO. Se mueve automaticamente con precio. Config TSLA 1-min: $0.25-$0.40.'}
+{heading:'Market Order',text:'Practicamente NUNCA en scalping TSLA 1-min. Slippage de 1-5 centavos. UNICA EXCEPTION: movimiento explosivo que necesita entrada inmediata.'},
+{heading:'Limit Order',text:'TU ORDEN PRINCIPAL (90%+ de trades). Se ejecuta SOLO al precio que especificas. Ideal para entradas precisas sin slippage.'},
+{heading:'Stop Order (Stop Market)',text:'TU STOP LOSS PRINCIPAL. Se convierte en MARKET al tocar tu nivel. Riesgo: slippage de 2-5 centavos en alta volatilidad.'},
+{heading:'Stop Limit Order',text:'MAS SEGURO: Define stop price + limit price. Da espacio de 2-3c debajo del stop para evitar quedar sin proteccion.'},
+{heading:'Trailing Stop',text:'EL MEJOR AMIGO DEL SCALPER. Se mueve automaticamente con el precio. Configuracion recomendada TSLA 1-min: $0.25-$0.40.'}
 ]},
-{id:'m11',title:'Module 11: Patrones de Velas Japonesas',icon:'🕯️',color:'#f97316',subtitle:'Patrones que confirman entradas',content:[
-{heading:'Hammer (Martillo)',text:'Cuerpo pequeno arriba, mecha larga abajo. En VWAP = bounce alcista. Solo tras tendencia bajista. Necesita confirmacion.'},
-{heading:'Shooting Star',text:'Cuerpo pequeno abajo, mecha larga arriba. En resistencia = reversal. Muy util en high del dia + RSI > 75.'},
-{heading:'Engulfing',text:'Vela grande absorbe anterior. Con volumen 2x = MUY fuerte. 65-72% probabilidad de seguir direccion.'},
-{heading:'Pin Bar',text:'Mecha 3x+ el cuerpo. Rechazo en nivel critico. Pin bar + VWAP + RSI sobreventa = excelente senal.'}
+{id:'m11',title:'Module 11: Patrones de Velas Japonesas',icon:'🕯️',color:'#f97316',subtitle:'Los patrones que confirman tus entradas',content:[
+{heading:'Hammer (Martillo) - Senal Alcista',text:'Cuerpo pequeno arriba, mecha larga abajo. En el VWAP = confirmacion de bounce. Solo valido despues de tendencia bajista. Necesita confirmacion de siguiente vela.'},
+{heading:'Shooting Star - Senal Bajista',text:'Cuerpo pequeno abajo, mecha larga arriba. En resistencia = confirmacion de reversal. MUY UTIL en high del dia + RSI > 75.'},
+{heading:'Doji - Indecision',text:'Cuerpo inexistente. En nivel critico = alerta de cambio. NO es senal de entrada por si sola. Espera siguiente vela para confirmar.'},
+{heading:'Engulfing - La Senal Mas Fuerte',text:'Vela grande que absorbe la anterior. Con volumen 2x = MUY fuerte. 65-72% de probabilidad de seguir la direccion en TSLA.'},
+{heading:'Pin Bar - Rechazo de Precio',text:'Mecha 3x+ el cuerpo. Rechazo brutal en nivel critico. Pin bar + VWAP + RSI sobreventa = una de las mejores senales de entrada.'}
 ]},
-{id:'m12',title:'Module 12: Earnings Day Playbook',icon:'🚨',color:'#ef4444',subtitle:'Dias mas volatiles',content:[
-{heading:'Earnings de Tesla',text:'4 veces al ano: Enero, Abril, Julio, Octubre. Post-earnings mueve 8-12% en 24 horas.'},
-{heading:'Pre-Earnings',text:'3-5 dias antes, IV sube. BB se comprimen. NO operes direccionales. Tamano posicion = mitad.'},
-{heading:'Post-Earnings Primeros 30 Min',text:'NO entres primeros 5 min. Espera 10-15 min para rango. Gap direction 60-65% prob mantenerse. Stop 1.5x mas amplio.'},
-{heading:'Errores Fatales Earnings Day',text:'NO apalancamiento. NO contra gap dia 1. NO overnight. NO al primer minuto. SI plan escrito ANTES. SI ganancias agresivas.'}
+{id:'m12',title:'Module 12: Earnings Day Playbook',icon:'🚨',color:'#ef4444',subtitle:'Estrategia para los dias mas volatiles',content:[
+{heading:'Que Son los Earnings',text:'Tesla reporta 4 veces al ano: Enero, Abril, Julio, Octubre. Post-earnings mueve 8-12% en 24 horas. Las MEJORES oportunidades Y las mas peligrosas.'},
+{heading:'Pre-Earnings: La Compra de Volatilidad',text:'3-5 dias antes, IV sube dramaticamente. Bollinger Bands se comprimen. NO operes direccionales pre-earnings. Usa tamano de posicion de mitad.'},
+{heading:'Post-Earnings: Los Primeros 30 Minutos',text:'NO entres en los primeros 5 minutos. Espera 10-15 min para rango inicial. Gap direction tiene 60-65% probabilidad de mantenerse. Stop 1.5x mas amplio.'},
+{heading:'Errores Fatales en Earnings Day',text:'NO uses apalancamiento. NO operes contra el gap dia 1. NO overnight. NO entres al primer minuto. SI tienes plan escrito ANTES. SI toma ganancias agresivamente.'}
 ]},
 {id:'m13',title:'Module 13: Level 2 & Order Flow',icon:'📟',color:'#06b6d4',subtitle:'Lo que ven los profesionales',content:[
-{heading:'Que es Level 2',text:'TODAS las ordenes abiertas. Para TSLA 1-min es la diferencia entre entrar correcto o ser liquidez de alguien.'},
-{heading:'Spread de Tesla',text:'Normal: 1-2c. > 5c = ALERTA. > 10c = NO OPERES. Spread > 5c = slippage $0.05-0.10 por trade.'},
-{heading:'Ordenes Institucionales',text:'WALL: 10K+ acciones = S/R. ICEBERG: orden grande dividida. SPOOFING: ordenes falsas, NO reacciones.'}
+{heading:'Que es el Level 2',text:'Muestra TODAS las ordenes abiertas de compra y venta. Para TSLA 1-min es la diferencia entre entrar en el movimiento correcto o ser liquidez de alguien mas.'},
+{heading:'Spread de Tesla',text:'Spread normal: 1-2 centavos. Spread > 5c = ALERTA. Spread > 10c = NO OPERES. El spread es tu costo oculto: $50/dia solo en spread con 500 shares.'},
+{heading:'Ordenes Institucionales',text:'WALL: 10,000+ acciones en un nivel = soporte/resistencia. ICEBERG: orden grande dividida en partes. SPOOFING: ordenes falsas - NO reacciones.'},
+{heading:'Time & Sales',text:'CADA transaccion ejecutada. Prints alto volumen + verde = senal alcista. Velocidad de prints indica momentum. Trade at ask = compradores agresivos.'}
 ]},
 {id:'m14',title:'Module 14: Configuracion de Webull',icon:'💻',color:'#8b5cf6',subtitle:'Tu estacion de batalla',content:[
-{heading:'Layout Optimo',text:'Izquierdo (70%): Grafico 1-min con indicadores. Derecho sup: Level 2. Medio: Time & Sales. Inf: Ordenes + posiciones.'},
-{heading:'Hotkeys',text:'B=Buy, S=Sell, Esc=Cancelar, Flatten=Cerrar. Hotkeys = 0.5-2s mas rapido = $0.10-0.30 diferencia.'},
-{heading:'Alertas',text:'(1) Precio VWAP. (2) Niveles dia anterior. (3) Niveles psicologicos. (4) Volumen spike > 2x. (5) RSI extremo.'}
+{heading:'Layout Optimo',text:'Panel izquierdo (70%): Grafico 1-min con todos los indicadores. Derecho superior: Level 2. Derecho medio: Time & Sales. Derecho inferior: Ordenes + posiciones.'},
+{heading:'Hotkeys',text:'B = Buy, S = Sell, Escape = Cancelar todo, Flatten = Cerrar posicion. Hotkeys = 0.5-2 segundos mas rapido que mouse = $0.10-$0.30 de diferencia en precio.'},
+{heading:'Alertas Automatizadas',text:'Configura: (1) Precio al VWAP. (2) Niveles del dia anterior. (3) Niveles psicologicos. (4) Volumen spike > 2x promedio. (5) RSI extremo. Maximo 5-7 alertas/dia.'},
+{heading:'Checklist Pre-Market',text:'8:30 Abre Webull. 8:40 Marca niveles. 8:55 Configura alertas. 9:10 Escribe plan. 9:25 Panel de ordenes listo. 9:30 SIN TOCAR en primeros 5 min.'}
 ]},
 {id:'m15',title:'Module 15: Short Selling en Tesla',icon:'📉',color:'#10b981',subtitle:'El lado oscuro del trading',content:[
-{heading:'Por Que Shortear',text:'Tesla cae con la misma violencia. Movimientos bajistas MAS RAPIDOS. Dias de -5% a -12% son comunes. Ignorar cortos = 50% oportunidades perdidas.'},
-{heading:'Reglas para Short',text:'Solo con sesgo bajista confirmado. Stops MAS AJUSTADOS ($0.40-0.50). NO en pre-market. Corta en PULLBACKS. Target = VWAP o low del dia.'},
-{heading:'Setups de Short',text:'#1 VWAP Rejection (58-64%). #2 EMA Death Cross + VWAP (55-60%). #3 Resistance Rejection (52-58%). MEJOR: 9:45-10:30 + VWAP debil.'},
-{heading:'Peligros',text:'Gamma Squeeze: $10-30/dia. Elon Tweets: +5-10% gap. Short Interest alto = squeezes probables. SOLO INTRADIA. NUNCA overnight.'}
+{heading:'Por Que Shortear Tesla',text:'Tesla cae con la misma violencia con la que sube. Movimientos bajistas son MAS RAPIDOS. Tesla ha tenido multiples dias de -5% a -12%. Ignorar cortos = ignorar 50% de oportunidades.'},
+{heading:'Reglas para Shortear',text:'Solo corta con sesgo bajista confirmado. Stops MAS AJUSTADOS ($0.40-$0.50 max). NO cortes en pre-market. Corta en PULLBACKS. Target = VWAP o low del dia.'},
+{heading:'Shares y Hard-to-Borrow',text:'Tesla normalmente es ETB (Easy-to-Borrow). Puede volverse HTB cerca de earnings. NUNCA pagues mas de 10% borrow rate. Espera 2-3 dias si es HTB.'},
+{heading:'Setups de Short',text:'#1 VWAP Rejection Short (58-64%). #2 EMA Death Cross + VWAP (55-60%). #3 Resistance Rejection Short (52-58%). MEJOR momento: 9:45-10:30 AM + VWAP debil.'},
+{heading:'Peligros del Shorting',text:'Gamma Squeeze: puede mover $10-$30/dia. Elon Tweets: +5-10% gap up. Short Interest alto = squeezes probables. REGLA FINAL: Solo corta en INTRADIA. NUNCA overnight.'}
 ]}
 ]
 
