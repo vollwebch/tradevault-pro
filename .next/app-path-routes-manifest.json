@@ -4,6 +4,7 @@
   "/api/auth/login/route": "/api/auth/login",
   "/api/auth/me/route": "/api/auth/me",
   "/api/auth/register/route": "/api/auth/register",
+  "/api/backup/route": "/api/backup",
   "/api/trades/[id]/route": "/api/trades/[id]",
   "/api/trades/route": "/api/trades",
   "/dashboard/page": "/dashboard",

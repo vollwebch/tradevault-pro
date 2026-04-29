@@ -4,6 +4,7 @@
   "/api/auth/login/route": "app/api/auth/login/route.js",
   "/api/auth/me/route": "app/api/auth/me/route.js",
   "/api/auth/register/route": "app/api/auth/register/route.js",
+  "/api/backup/route": "app/api/backup/route.js",
   "/api/trades/[id]/route": "app/api/trades/[id]/route.js",
   "/api/trades/route": "app/api/trades/route.js",
   "/dashboard/page": "app/dashboard/page.js",

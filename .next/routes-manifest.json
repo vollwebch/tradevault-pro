@@ -59,6 +59,12 @@
       "namedRegex": "^/api/auth/register(?:/)?$"
     },
     {
+      "page": "/api/backup",
+      "regex": "^/api/backup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/backup(?:/)?$"
+    },
+    {
       "page": "/api/trades",
       "regex": "^/api/trades(?:/)?$",
       "routeKeys": {},
