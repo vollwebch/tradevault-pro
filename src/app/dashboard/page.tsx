@@ -16,7 +16,7 @@ import { Progress } from '@/components/ui/progress'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, Legend } from 'recharts'
 import { LayoutDashboard, BookOpen, BarChart3, GraduationCap, User, LogIn, Plus, Pencil, Trash2, X, Menu, TrendingUp, TrendingDown, Trophy, Target, Flame, DollarSign, Activity, Calendar, Shield, Upload, LogOut, Eye, Clock, Award, Zap, Calculator, ClipboardCheck, Brain, Timer, Wallet, Gamepad2, CalendarDays, Grid3X3, BookMarked, FileText } from 'lucide-react'
 import TradeVaultPlanner from '@/components/TradeVaultPlanner'
-import DynamicChecklist from '@/components/DynamicChecklist'
+import TradeVaultChecklistFinal from '@/components/TradeVaultChecklistFinal'
 
 /* ─── TYPES ─── */
 interface User { id:string;email:string;name:string;avatar:string|null;broker:string|null;createdAt:string;password?:string }
@@ -625,7 +625,7 @@ export default function Home(){
           {page==='calculator'&&<TradeVaultPlanner />}
 
           {/* CHECKLIST */}
-          {page==='checklist'&&<DynamicChecklist />}
+          {page==='checklist'&&<TradeVaultChecklistFinal />}
 
           {/* PSYCHOLOGY */}
           {page==='psychology'&&(()=>{
