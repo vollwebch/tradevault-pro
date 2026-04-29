@@ -354,7 +354,7 @@ export default function Home(){
     const rawPnl=tf.direction==='LONG'?(xp-ep)*sh:(ep-xp)*sh
     const grossPnl=rawPnl-comm
     const bf=tf.brokerFees?parseFloat(tf.brokerFees):0
-    const ps=tf.profitSplit?parseInt(tf.profitSplit):100
+    const ps=tf.profitSplit?parseFloat(tf.profitSplit):100
     const realPnl=Math.round((grossPnl-bf)*(ps/100)*100)/100
     const token=getStore<string>('tv_token','')
     if(!token){showToast('Token no encontrado, vuelve a iniciar sesion');return}
@@ -908,7 +908,7 @@ export default function Home(){
               {/* Liquidacion Final */}
               {(()=>{
                 const ep=parseFloat(tf.entryPrice)||0,xp=parseFloat(tf.exitPrice)||0,sh=parseFloat(tf.shares)||0
-                const comm=parseFloat(tf.commission)||0,bf=tf.isFunded?(parseFloat(tf.brokerFees)||0):0,ps=tf.isFunded?(parseInt(tf.profitSplit)||100):100
+                const comm=parseFloat(tf.commission)||0,bf=tf.isFunded?(parseFloat(tf.brokerFees)||0):0,ps=tf.isFunded?(parseFloat(tf.profitSplit)||100):100
                 const rawPnl=tf.direction==='LONG'?(xp-ep)*sh:(ep-xp)*sh
                 const grossPnl=rawPnl-comm
                 const netReal=Math.round((grossPnl-bf)*(ps/100)*100)/100
