@@ -316,7 +316,7 @@ export default function Home(){
       if(Object.keys(ea).length===EXAM.length){setExamAns(ea);setExamStarted(true);setExamDone(true)}
       else if(Object.keys(ea).length>0){setExamAns(ea);setExamStarted(true)}
       setInitCapital(getStore<number>(`tv_cap_${u.id}`,0));setTxs(getStore(`tv_tx_${u.id}`,[]))
-      setCheckItems(getStore(`tv_chk_${u.id}`,{}));setCheckHistory(getStore(`tv_chkh_${u.id}`,[]))
+      const savedChk=getStore(`tv_chk_${u.id}`,[]);setCheckItems(Array.isArray(savedChk)?savedChk:[]);setCheckHistory(getStore(`tv_chkh_${u.id}`,[]))
       setPsychEntries(getStore(`tv_psy_${u.id}`,[]));setGoals(getStore(`tv_goals_${u.id}`,[]))
       setSimBal(getStore(`tv_sim_b_${u.id}`,25000));setSimTrades(getStore(`tv_sim_t_${u.id}`,[]))
       setPlayStatus(getStore(`tv_play_${u.id}`,{}));setReviews(getStore(`tv_rev_${u.id}`,[]))
