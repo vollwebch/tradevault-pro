@@ -17,6 +17,7 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { LayoutDashboard, BookOpen, BarChart3, GraduationCap, User, LogIn, Plus, Pencil, Trash2, X, Menu, TrendingUp, TrendingDown, Trophy, Target, Flame, DollarSign, Activity, Calendar, Shield, Upload, LogOut, Eye, Clock, Award, Zap, Calculator, ClipboardCheck, Brain, Timer, Wallet, Gamepad2, CalendarDays, Grid3X3, BookMarked, FileText } from 'lucide-react'
 import TradeVaultPlanner from '@/components/TradeVaultPlanner'
 import TradeVaultChecklistFinal from '@/components/TradeVaultChecklistFinal'
+import PsicologiaTrader from '@/components/PsicologiaTrader'
 
 /* ─── TYPES ─── */
 interface User { id:string;email:string;name:string;avatar:string|null;broker:string|null;createdAt:string;password?:string }
@@ -628,41 +629,7 @@ export default function Home(){
           {page==='checklist'&&<TradeVaultChecklistFinal />}
 
           {/* PSYCHOLOGY */}
-          {page==='psychology'&&(()=>{
-            const avgPre=psychEntries.length?Math.round(psychEntries.reduce((a,e)=>a+e.pre,0)/psychEntries.length*10)/10:0
-            const avgPost=psychEntries.length?Math.round(psychEntries.reduce((a,e)=>a+e.post,0)/psychEntries.length*10)/10:0
-            const trendLabel=psychEntries.length>=2?(() => {const last3=psychEntries.slice(-3);const diff=last3[last3.length-1].post-last3[0].pre;if(diff>1)return'Positiva';if(diff<-1)return'Negativa';return'Estable'})():'Sin datos'
-            const trendColor=trendLabel==='Positiva'?'text-[#00c853]':trendLabel==='Negativa'?'text-[#e31937]':'text-[#f59e0b]'
-            return(<div className="space-y-4">
-              <div><h3 className="text-sm font-semibold">Psicologia del Trader</h3><p className="text-xs text-zinc-500">Rastrea tu estado mental y emocional</p></div>
-              {/* 4 Summary Cards */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 text-center"><p className="text-[10px] text-zinc-500 uppercase">Emocion Pre</p><p className="text-2xl font-bold mt-1" style={{color:'#ff6b00'}}>{avgPre||psychPre}</p><p className="text-lg">{avgPre>=7?'😊':avgPre>=4?'😐':'😟'}</p></CardContent></Card>
-                <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 text-center"><p className="text-[10px] text-zinc-500 uppercase">Emocion Post</p><p className="text-2xl font-bold mt-1" style={{color:'#00d4ff'}}>{avgPost||psychPost}</p><p className="text-lg">{avgPost>=7?'😊':avgPost>=4?'😐':'😟'}</p></CardContent></Card>
-                <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 text-center"><p className="text-[10px] text-zinc-500 uppercase">Registros</p><p className="text-2xl font-bold mt-1">{psychEntries.length}</p><p className="text-xs text-zinc-500">total</p></CardContent></Card>
-                <Card className="bg-[#111] border-[#222]"><CardContent className="p-4 text-center"><p className="text-[10px] text-zinc-500 uppercase">Tendencia</p><p className={`text-lg font-bold mt-1 ${trendColor}`}>{trendLabel}</p><p className="text-lg">{trendLabel==='Positiva'?'📈':trendLabel==='Negativa'?'📉':'➡️'}</p></CardContent></Card>
-              </div>
-              {/* New Entry Form */}
-              <Card className="bg-[#111] border-[#222]"><CardContent className="p-5 space-y-4">
-                <h4 className="text-sm font-semibold">Nuevo Registro</h4>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><Label className="text-xs text-zinc-400">Pre-sesion Emocion <span className="font-bold text-white">{psychPre}</span>/10</Label><Slider min={1} max={10} value={[psychPre]} onValueChange={v=>setPsychPre(v[0])} className="mt-2"/></div>
-                    <div><Label className="text-xs text-zinc-400">Post-sesion Emocion <span className="font-bold text-white">{psychPost}</span>/10</Label><Slider min={1} max={10} value={[psychPost]} onValueChange={v=>setPsychPost(v[0])} className="mt-2"/></div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><Label className="text-xs text-zinc-400">Confianza <span className="font-bold text-white">{psychConf}</span>/10</Label><Slider min={1} max={10} value={[psychConf]} onValueChange={v=>setPsychConf(v[0])} className="mt-2"/></div>
-                    <div><Label className="text-xs text-zinc-400">Disciplina <span className="font-bold text-white">{psychDisc}</span>/10</Label><Slider min={1} max={10} value={[psychDisc]} onValueChange={v=>setPsychDisc(v[0])} className="mt-2"/></div>
-                  </div>
-                  <div><Label className="text-xs text-zinc-400">Calidad de Sesion</Label><Select value={psychQuality} onValueChange={setPsychQuality}><SelectTrigger className="bg-[#1a1a1a] border-[#333] mt-1"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="Excelente">Excelente</SelectItem><SelectItem value="Normal">Normal</SelectItem><SelectItem value="Mala">Mala</SelectItem><SelectItem value="Terrible">Terrible</SelectItem></SelectContent></Select></div>
-                  <div><Label className="text-xs text-zinc-400">Notas / Reflexiones</Label><Textarea placeholder="Como te sentiste hoy? Que aprendiste?" value={psychNotes} onChange={e=>setPsychNotes(e.target.value)} className="bg-[#1a1a1a] border-[#333] mt-1 min-h-[80px]"/></div>
-                </div>
-                <Button className="bg-[#e31937] hover:bg-[#c41530] text-white" onClick={()=>{const id=psychEntries.length>0?Math.max(...psychEntries.map(e=>e.id))+1:1;setPsychEntries(p=>[...p,{id,date:new Date().toISOString(),pre:psychPre,post:psychPost,conf:psychConf,disc:psychDisc,quality:psychQuality,notes:psychNotes}]);setPsychPre(5);setPsychPost(5);setPsychConf(5);setPsychDisc(5);setPsychQuality('Normal');setPsychNotes('');showToast('Registro guardado')}}>Guardar Registro</Button>
-              </CardContent></Card>
-              {/* Recent Records */}
-              {psychEntries.length>0&&<Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">Registros Recientes</CardTitle></CardHeader><CardContent className="space-y-2">{psychEntries.slice().reverse().slice(0,10).map(e=>(<div key={e.id} className="p-3 rounded-lg bg-[#1a1a1a] flex justify-between items-center"><div className="flex items-center gap-3"><div><p className="text-xs font-medium">{fmtDateShort(e.date)}</p><p className="text-xs text-zinc-400">Pre: {e.pre} | Post: {e.post} | Conf: {e.conf} | Disc: {e.disc}</p></div></div><Badge className={e.quality==='Excelente'?'bg-[#00c853]/20 text-[#00c853]':e.quality==='Mala'?'bg-[#f59e0b]/20 text-[#f59e0b]':e.quality==='Terrible'?'bg-[#e31937]/20 text-[#e31937]':'bg-[#333] text-zinc-400'}>{e.quality}</Badge></div>))}</CardContent></Card>}
-            </div>)
-          })()}
+          {page==='psychology'&&<PsicologiaTrader />}
 
           {/* TIMER */}
           {page==='timer'&&(
