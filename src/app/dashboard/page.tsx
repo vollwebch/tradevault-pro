@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, Legend } from 'recharts'
 import { LayoutDashboard, BookOpen, BarChart3, GraduationCap, User, LogIn, Plus, Pencil, Trash2, X, Menu, TrendingUp, TrendingDown, Trophy, Target, Flame, DollarSign, Activity, Calendar, Shield, Upload, LogOut, Eye, Clock, Award, Zap, Calculator, ClipboardCheck, Brain, Timer, Wallet, Gamepad2, CalendarDays, Grid3X3, BookMarked, FileText } from 'lucide-react'
+import TradeVaultPlanner from '@/components/TradeVaultPlanner'
 
 /* ─── TYPES ─── */
 interface User { id:string;email:string;name:string;avatar:string|null;broker:string|null;createdAt:string;password?:string }
@@ -266,7 +267,7 @@ export default function Home(){
   const [completed,setCompleted]=useState<string[]>([]);const [examStarted,setExamStarted]=useState(false);const [examDone,setExamDone]=useState(false)
   const [examAns,setExamAns]=useState<Record<number,number>>({});const [showExpl,setShowExpl]=useState<Record<number,boolean>>({})
   const [initCapital,setInitCapital]=useState(0);const [txs,setTxs]=useState<{id:number,date:string,type:'deposit'|'withdrawal',amount:number,note:string}[]>([])
-  const [calcCap,setCalcCap]=useState('25000');const [calcRisk,setCalcRisk]=useState('1');const [calcStop,setCalcStop]=useState('0.50');const [calcEntry,setCalcEntry]=useState('250');const [calcDir,setCalcDir]=useState<'LONG'|'SHORT'>('LONG')
+  // Calculator states moved to TradeVaultPlanner component
   const [checkItems,setCheckItems]=useState<Record<string,boolean>>({});const [checkHistory,setCheckHistory]=useState<{date:string,done:number,total:number}[]>([])
   const [psychEntries,setPsychEntries]=useState<{id:number,date:string,pre:number,post:number,conf:number,disc:number,quality:string,notes:string}[]>([])
   const [psychPre,setPsychPre]=useState(5);const [psychPost,setPsychPost]=useState(5);const [psychConf,setPsychConf]=useState(5);const [psychDisc,setPsychDisc]=useState(5);const [psychQuality,setPsychQuality]=useState('Normal');const [psychNotes,setPsychNotes]=useState('')
@@ -627,44 +628,8 @@ export default function Home(){
             </div>
           )}
 
-          {/* CALCULATOR */}
-          {page==='calculator'&&(()=>{
-            const cap=parseFloat(calcCap)||0,risk=parseFloat(calcRisk)||0,stop=parseFloat(calcStop)||0,entry=parseFloat(calcEntry)||0
-            const riesgoMaximo=(cap*risk)/100
-            const sharesMaximas=stop>0?Math.floor(riesgoMaximo/stop):0
-            const costoTotal=sharesMaximas*entry
-            const ratios=[1,1.5,2,3,5]
-            return(<div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Panel de Parametros */}
-                <Card className="bg-[#111] border-[#222]"><CardContent className="p-6 space-y-4">
-                  <h3 className="font-semibold text-lg">Parametros</h3>
-                  <div><label className="text-zinc-300 text-sm font-medium">Capital ($)</label><input type="number" value={calcCap} onChange={e=>setCalcCap(e.target.value)} className="w-full h-9 bg-[#1a1a1a] border border-[#333] rounded-md px-3 mt-1 text-white outline-none focus:border-[#e31937] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div><label className="text-zinc-300 text-sm font-medium">Riesgo por trade (%)</label><input type="number" step="0.1" value={calcRisk} onChange={e=>setCalcRisk(e.target.value)} className="w-full h-9 bg-[#1a1a1a] border border-[#333] rounded-md px-3 mt-1 text-white outline-none focus:border-[#e31937] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
-                    <div><label className="text-zinc-300 text-sm font-medium">Distancia al Stop ($)</label><input type="number" step="0.01" value={calcStop} onChange={e=>setCalcStop(e.target.value)} className="w-full h-9 bg-[#1a1a1a] border border-[#333] rounded-md px-3 mt-1 text-white outline-none focus:border-[#e31937] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
-                  </div>
-                  <div><label className="text-zinc-300 text-sm font-medium">Precio de Entrada ($)</label><input type="number" value={calcEntry} onChange={e=>setCalcEntry(e.target.value)} className="w-full h-9 bg-[#1a1a1a] border border-[#333] rounded-md px-3 mt-1 text-white outline-none focus:border-[#e31937] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
-                  <div className="flex gap-2"><button onClick={()=>setCalcDir('LONG')} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all border ${calcDir==='LONG'?'bg-[#00c853]/15 border-[#00c853] text-[#00c853]':'border-[#333] text-zinc-400'}`}>LONG</button><button onClick={()=>setCalcDir('SHORT')} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all border ${calcDir==='SHORT'?'bg-[#e31937]/15 border-[#e31937] text-[#e31937]':'border-[#333] text-zinc-400'}`}>SHORT</button></div>
-                </CardContent></Card>
-                {/* Panel de Resultados */}
-                <Card className="bg-[#111] border-[#222]"><CardContent className="p-6 space-y-4">
-                  <h3 className="font-semibold text-lg">Resultados</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm"><span className="text-zinc-400">Riesgo maximo</span><span className="font-semibold text-[#f59e0b]">${riesgoMaximo.toFixed(2)}</span></div>
-                    <div className="flex justify-between text-sm"><span className="text-zinc-400">Shares maximos</span><span className="font-semibold text-[#00d4ff]">{sharesMaximas}</span></div>
-                    <div className="flex justify-between text-sm"><span className="text-zinc-400">Costo total (Apalancamiento)</span><span className="font-semibold text-white">${costoTotal.toLocaleString()}</span></div>
-                  </div>
-                  <div className="mt-4"><div className="w-full bg-[#1a1a1a] rounded-full h-3 overflow-hidden"><div className="h-full bg-[#f59e0b] transition-all duration-500" style={{width:`${Math.min(risk*10,100)}%`}}></div></div><p className="text-[10px] text-zinc-500 mt-2">{risk}% del capital en riesgo</p></div>
-                </CardContent></Card>
-              </div>
-              {/* Tabla R:R Dinamica */}
-              <Card className="bg-[#111] border-[#222]"><CardContent className="p-6">
-                <h3 className="font-semibold text-lg mb-4">Proyecciones R:R</h3>
-                <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-b border-[#222] text-zinc-400"><th className="text-left py-2">Ratio</th><th className="text-right py-2">Precio Target</th><th className="text-right py-2">Profit Estimado</th></tr></thead><tbody>{ratios.map(r=>{const targetPrice=calcDir==='LONG'?entry+(stop*r):entry-(stop*r);const profit=riesgoMaximo*r;return(<tr key={r} className="border-b border-[#222]/50 hover:bg-[#1a1a1a]"><td className="py-3 font-semibold text-[#00d4ff]">1:{r}</td><td className="text-right py-3 text-[#00c853]">${targetPrice.toFixed(2)}</td><td className="text-right py-3 text-[#00c853]">+${profit.toFixed(2)}</td></tr>)})}</tbody></table></div>
-              </CardContent></Card>
-            </div>)
-          })()}
+          {/* CALCULATOR - TradeVault Planner */}
+          {page==='calculator'&&<TradeVaultPlanner />}
 
           {/* CHECKLIST */}
           {page==='checklist'&&(()=>{
