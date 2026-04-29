@@ -71,6 +71,12 @@
       "namedRegex": "^/api/trades(?:/)?$"
     },
     {
+      "page": "/backup-file",
+      "regex": "^/backup\\-file(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/backup\\-file(?:/)?$"
+    },
+    {
       "page": "/dashboard",
       "regex": "^/dashboard(?:/)?$",
       "routeKeys": {},

@@ -7,6 +7,7 @@
   "/api/backup/route": "app/api/backup/route.js",
   "/api/trades/[id]/route": "app/api/trades/[id]/route.js",
   "/api/trades/route": "app/api/trades/route.js",
+  "/backup-file/route": "app/backup-file/route.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/page": "app/page.js"
 }

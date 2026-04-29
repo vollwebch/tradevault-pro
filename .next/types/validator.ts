@@ -119,6 +119,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/backup-file/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/backup-file">> = Specific
+  const handler = {} as typeof import("../../src/app/backup-file/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 
 
 
