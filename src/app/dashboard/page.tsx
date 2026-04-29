@@ -17,7 +17,7 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { LayoutDashboard, BookOpen, BarChart3, GraduationCap, User, LogIn, Plus, Pencil, Trash2, X, Menu, TrendingUp, TrendingDown, Trophy, Target, Flame, DollarSign, Activity, Calendar, Shield, Upload, LogOut, Eye, Clock, Award, Zap, Calculator, ClipboardCheck, Brain, Timer, Wallet, Gamepad2, CalendarDays, Grid3X3, BookMarked, FileText } from 'lucide-react'
 import TradeVaultPlanner from '@/components/TradeVaultPlanner'
 import TradeVaultChecklistFinal from '@/components/TradeVaultChecklistFinal'
-import PsicologiaTrader from '@/components/PsicologiaTrader'
+import PsicologiaTraderPro from '@/components/PsicologiaTraderPro'
 
 /* ─── TYPES ─── */
 interface User { id:string;email:string;name:string;avatar:string|null;broker:string|null;createdAt:string;password?:string }
@@ -629,7 +629,7 @@ export default function Home(){
           {page==='checklist'&&<TradeVaultChecklistFinal />}
 
           {/* PSYCHOLOGY */}
-          {page==='psychology'&&<PsicologiaTrader />}
+          {page==='psychology'&&<PsicologiaTraderPro />}
 
           {/* TIMER */}
           {page==='timer'&&(
