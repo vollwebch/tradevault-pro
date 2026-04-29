@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 export async function GET() {
-  const filePath = path.join(process.cwd(), 'download', 'TRADEVAULT-BACKUP-20260429-182251.zip')
+  const filePath = path.join(process.cwd(), 'download', 'backup-tradevault.zip')
   
   if (!fs.existsSync(filePath)) {
     return NextResponse.json({ error: 'Archivo no encontrado' }, { status: 404 })
