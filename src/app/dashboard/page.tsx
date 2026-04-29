@@ -267,8 +267,9 @@ export default function Home(){
   const [completed,setCompleted]=useState<string[]>([]);const [examStarted,setExamStarted]=useState(false);const [examDone,setExamDone]=useState(false)
   const [examAns,setExamAns]=useState<Record<number,number>>({});const [showExpl,setShowExpl]=useState<Record<number,boolean>>({})
   const [initCapital,setInitCapital]=useState(0);const [txs,setTxs]=useState<{id:number,date:string,type:'deposit'|'withdrawal',amount:number,note:string}[]>([])
-  // Calculator states moved to TradeVaultPlanner component
-  const [checkItems,setCheckItems]=useState<Record<string,boolean>>({});const [checkHistory,setCheckHistory]=useState<{date:string,done:number,total:number}[]>([])
+  // Checklist example templates
+  const CHECKLIST_EXAMPLES=[{name:'Pre-Market (Antes de abrir)',items:['Revisar noticias overnight de Tesla / Nasdaq','Verificar SPY / QQQ futures (direccion del mercado)','Identificar soportes y resistencias clave del dia','Marcar niveles del dia anterior (High/Low)','Revisar calendario economico (Earnings, FOMC, CPI)','Definir plan del dia: setups que busco','Verificar VWAP y EMA en el 5m y 1m','Configurar alertas de precio en niveles clave','Confirmar que el volumen pre-market es normal','Revisar mi diario de trades de ayer']},{name:'Pre-Trade (Antes de entrar)',items:['El precio esta en una zona de interes (S/R)','El volumen confirma la direccion','Indicadores alineados (ADX, RSI, MACD)','Se cumple mi setup de entrada','Stop loss definido antes de entrar','Tamano de posicion calculado (calculadora)','Ratio minimo 1:2 confirmado','No tengo FOMO ni tilt emocional','Risk management definido para esta operacion','Hotkeys verificados y panel listo']},{name:'Post-Trade (Despues de salir)',items:['Registrar el trade en la bitacora','Captura de pantalla del chart guardada','Analizar si segui el plan o me desvie','Evaluacion emocional: entre con calma?','Que aprendi de este trade?','Actualizar mi playbook si fue un setup nuevo','Revisar si el TP/SL fueron los correctos','Anotar errores para no repetir','No buscar revancha si fue perdida','Prepararme para el proximo trade con calma']}]
+  const [checkItems,setCheckItems]=useState<{id:number;text:string;done:boolean}[]>([]);const [checkHistory,setCheckHistory]=useState<{date:string;done:number;total:number}[]>([]);const [checkTab,setCheckTab]=useState<'mis-checklists'|'ejemplos'>('mis-checklists');const [newCheckText,setNewCheckText]=useState('')
   const [psychEntries,setPsychEntries]=useState<{id:number,date:string,pre:number,post:number,conf:number,disc:number,quality:string,notes:string}[]>([])
   const [psychPre,setPsychPre]=useState(5);const [psychPost,setPsychPost]=useState(5);const [psychConf,setPsychConf]=useState(5);const [psychDisc,setPsychDisc]=useState(5);const [psychQuality,setPsychQuality]=useState('Normal');const [psychNotes,setPsychNotes]=useState('')
   const [timerRun,setTimerRun]=useState(false);const [timerSec,setTimerSec]=useState(0);const [pomMin,setPomMin]=useState(25);const [pomRun,setPomRun]=useState(false);const [pomSec,setPomSec]=useState(25*60);const [sesCount,setSesCount]=useState(0)
@@ -448,9 +449,6 @@ export default function Home(){
 
   const simWR=simTrades.length?Math.round(simTrades.filter(t=>t.pnl>0).length/simTrades.length*100):0
   const simPnL=simTrades.reduce((a,t)=>a+t.pnl,0)
-
-  // Check items
-  const CHECKLIST_ITEMS=['Revisé noticias Tesla overnight','Vi pre-market price action','Marqué niveles del día anterior','Revisé calendario económico','Chequé SPY futures','Definí mi plan del día','Revisé mi diario de ayer','Mi estado mental es el adecuado','VWAP identificado','Niveles S/R marcados','Alertas configuradas','Risk % definido para hoy','Hotkeys verificados','Panel de ordenas listo','Sin tilt/FOMO']
 
   // Heatmap data
   const heatData=useMemo(()=>{
@@ -633,17 +631,60 @@ export default function Home(){
 
           {/* CHECKLIST */}
           {page==='checklist'&&(()=>{
-            const doneCount=CHECKLIST_ITEMS.filter(i=>checkItems[i]).length
+            const doneCount=checkItems.filter(i=>i.done).length
+            const totalCount=checkItems.length
             return(<div className="space-y-4">
-              <div className="flex items-center justify-between"><Progress value={doneCount/CHECKLIST_ITEMS.length*100} className="flex-1 mr-4 h-2"/><span className="text-sm font-medium">{doneCount}/{CHECKLIST_ITEMS.length}</span></div>
-              <div className="space-y-2">{CHECKLIST_ITEMS.map((item,i)=>(
-                <label key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[#111] border-[#222] cursor-pointer hover:bg-[#1a1a1a]">
-                  <input type="checkbox" checked={!!checkItems[item]} onChange={e=>setCheckItems(p=>({...p,[item]:e.target.checked}))} className="w-4 h-4 accent-[#e31937]"/>
-                  <span className={`text-sm ${checkItems[item]?'text-zinc-400 line-through':'text-white'}`}>{item}</span>
-                </label>
-              ))}</div>
-              <div className="flex gap-2"><Button size="sm" onClick={()=>{const h=[...checkHistory,{date:new Date().toISOString(),done:doneCount,total:CHECKLIST_ITEMS.length}];setCheckHistory(h);showToast('Checklist guardado');setCheckItems({})}} className="bg-[#e31937] hover:bg-[#c41530] text-white">Guardar y Resetear</Button><Button size="sm" variant="outline" className="border-[#333]" onClick={()=>setCheckItems({})}>Resetear</Button></div>
-              {checkHistory.length>0&&<Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">Historial</CardTitle></CardHeader><CardContent>{checkHistory.slice(-5).reverse().map((h,i)=>(<div key={i} className="flex justify-between text-xs py-1"><span className="text-zinc-400">{fmtDateShort(h.date)}</span><span>{h.done}/{h.total} completados</span></div>))}</CardContent></Card>}
+              {/* Tabs */}
+              <div className="flex gap-2">
+                <button onClick={()=>setCheckTab('mis-checklists')} className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${checkTab==='mis-checklists'?'bg-[#e31937] text-white':'bg-[#111] border border-[#222] text-zinc-400 hover:text-white'}`}>Mis Checklists</button>
+                <button onClick={()=>setCheckTab('ejemplos')} className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${checkTab==='ejemplos'?'bg-[#00d4ff] text-black':'bg-[#111] border border-[#222] text-zinc-400 hover:text-white'}`}>Ejemplos</button>
+              </div>
+
+              {checkTab==='ejemplos'&&<div className="space-y-4">
+                <p className="text-xs text-zinc-500">Plantillas de ejemplo. Copialas a tu checklist personal con un clic.</p>
+                {CHECKLIST_EXAMPLES.map((tmpl,ti)=>(
+                  <Card key={ti} className="bg-[#111] border-[#222]"><CardHeader className="pb-2"><div className="flex items-center justify-between"><CardTitle className="text-sm font-bold">{tmpl.name}</CardTitle><Badge className="bg-[#333] text-zinc-300 text-[10px]">{tmpl.items.length} items</Badge></div></CardHeader><CardContent className="space-y-1">
+                    {tmpl.items.map((item,ii)=>(<div key={ii} className="flex items-center gap-2 py-1"><div className="w-3 h-3 rounded border border-[#333] flex-shrink-0"/><span className="text-xs text-zinc-300">{item}</span></div>))}
+                    <button onClick={()=>{const nextId=checkItems.length>0?Math.max(...checkItems.map(c=>c.id))+1:1;const newItems=tmpl.items.map((t,ii)=>({id:nextId+ii,text:t,done:false}));setCheckItems(prev=>[...prev,...newItems]);setCheckTab('mis-checklists');showToast(`${tmpl.name} copiada a tu checklist`)}} className="mt-3 w-full py-2 rounded-lg bg-[#00d4ff]/10 border border-[#00d4ff]/30 text-[#00d4ff] text-xs font-bold hover:bg-[#00d4ff]/20 transition-all">Copiar a mi Checklist</button>
+                  </CardContent></Card>
+                ))}
+              </div>}
+
+              {checkTab==='mis-checklists'&&<div className="space-y-4">
+                {/* Progress */}
+                {totalCount>0&&<div className="flex items-center justify-between"><Progress value={doneCount/totalCount*100} className="flex-1 mr-4 h-2"/><span className="text-sm font-medium">{doneCount}/{totalCount}</span></div>}
+
+                {/* Add new item */}
+                <div className="flex gap-2">
+                  <input type="text" value={newCheckText} onChange={e=>setNewCheckText(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&newCheckText.trim()){const nextId=checkItems.length>0?Math.max(...checkItems.map(c=>c.id))+1:1;setCheckItems(prev=>[...prev,{id:nextId,text:newCheckText.trim(),done:false}]);setNewCheckText('')}}} placeholder="Escribe una tarea..." className="flex-1 h-9 bg-[#1a1a1a] border border-[#333] rounded-lg px-3 text-sm text-white outline-none focus:border-[#e31937] transition-all"/>
+                  <button onClick={()=>{if(newCheckText.trim()){const nextId=checkItems.length>0?Math.max(...checkItems.map(c=>c.id))+1:1;setCheckItems(prev=>[...prev,{id:nextId,text:newCheckText.trim(),done:false}]);setNewCheckText('')}}} className="px-4 py-2 rounded-lg bg-[#e31937] hover:bg-[#c41530] text-white text-xs font-bold transition-all">Agregar</button>
+                </div>
+
+                {/* Items */}
+                {checkItems.length===0&&<div className="text-center py-12"><p className="text-zinc-500 text-sm">No tienes tareas aun</p><p className="text-zinc-600 text-xs mt-1">Escribe una arriba o copia una plantilla desde Ejemplos</p></div>}
+                <div className="space-y-2">{checkItems.map(item=>(
+                  <div key={item.id} className={`flex items-center gap-3 p-3 rounded-lg bg-[#111] border border-[#222] group transition-all ${item.done?'opacity-60':''}`}>
+                    <input type="checkbox" checked={item.done} onChange={()=>setCheckItems(prev=>prev.map(c=>c.id===item.id?{...c,done:!c.done}:c))} className="w-4 h-4 accent-[#e31937] cursor-pointer flex-shrink-0"/>
+                    <span className={`flex-1 text-sm ${item.done?'text-zinc-500 line-through':'text-white'}`}>{item.text}</span>
+                    <button onClick={()=>setCheckItems(prev=>prev.filter(c=>c.id!==item.id))} className="opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-[#e31937] transition-all p-1 rounded flex-shrink-0"><Trash2 size={14}/></button>
+                  </div>
+                ))}</div>
+
+                {/* Actions */}
+                {totalCount>0&&<div className="flex gap-2">
+                  <Button size="sm" onClick={()=>{const h=[...checkHistory,{date:new Date().toISOString(),done:doneCount,total:totalCount}];setCheckHistory(h);setCheckItems([]);showToast('Checklist guardado y reseteado')}} className="bg-[#e31937] hover:bg-[#c41530] text-white">Guardar y Resetear</Button>
+                  <Button size="sm" variant="outline" className="border-[#333]" onClick={()=>setCheckItems([])}>Limpiar Todo</Button>
+                  <Button size="sm" variant="outline" className="border-[#00c853]/30 text-[#00c853]" onClick={()=>setCheckItems(prev=>prev.map(c=>({...c,done:true})))}>Marcar Todas</Button>
+                </div>}
+
+                {/* History */}
+                {checkHistory.length>0&&<Card className="bg-[#111] border-[#222]"><CardHeader><CardTitle className="text-sm">Historial</CardTitle></CardHeader><CardContent>{checkHistory.slice(-8).reverse().map((h,i)=>(
+                  <div key={i} className="flex justify-between items-center text-xs py-1.5 border-b border-[#222]/50 last:border-0">
+                    <span className="text-zinc-400">{fmtDateShort(h.date)}</span>
+                    <div className="flex items-center gap-2"><Progress value={h.total>0?h.done/h.total*100:0} className="w-16 h-1.5"/><span>{h.done}/{h.total}</span></div>
+                  </div>
+                ))}</CardContent></Card>}
+              </div>}
             </div>)
           })()}
 
