@@ -49,6 +49,17 @@ const TradeVaultChecklistFinal = () => {
     setSesionConfirmada(false);
   };
 
+  const deselectAll = () => {
+    setTasks(tasks.map(t => ({ ...t, completed: false })));
+    setSesionConfirmada(false);
+  };
+
+  const deleteAll = () => {
+    if (tasks.length === 0) return;
+    setTasks([]);
+    setSesionConfirmada(false);
+  };
+
   const confirmarRacha = () => {
     if (isPerfectDay && !sesionConfirmada) {
       const newStreak = streak + 1;
@@ -103,12 +114,26 @@ const TradeVaultChecklistFinal = () => {
         <div className="bg-[#111] border border-[#222] rounded-3xl overflow-hidden shadow-2xl">
           <div className="px-8 py-6 border-b border-[#222] flex justify-between items-center bg-[#1a1a1a]/40">
             <h3 className="font-bold text-xl">Checklist Pre-Market</h3>
-            <button
-              onClick={addTask}
-              className="text-[10px] font-bold bg-[#e31937] hover:bg-[#c41530] text-white px-4 py-2 rounded-xl transition-all shadow-lg active:scale-95"
-            >
-              + AÑADIR OBJETIVO
-            </button>
+            <div className="flex gap-2 flex-wrap justify-end">
+              <button
+                onClick={deselectAll}
+                className="text-[10px] font-bold bg-[#333] hover:bg-[#444] text-zinc-300 px-3 py-2 rounded-xl transition-all active:scale-95"
+              >
+                ✖ DESELECCIONAR TODO
+              </button>
+              <button
+                onClick={deleteAll}
+                className="text-[10px] font-bold bg-[#e31937] hover:bg-[#c41530] text-white px-3 py-2 rounded-xl transition-all active:scale-95"
+              >
+                🗑 BORRAR TODO
+              </button>
+              <button
+                onClick={addTask}
+                className="text-[10px] font-bold bg-[#e31937] hover:bg-[#c41530] text-white px-3 py-2 rounded-xl transition-all shadow-lg active:scale-95"
+              >
+                + AÑADIR OBJETIVO
+              </button>
+            </div>
           </div>
 
           <div className="p-8 space-y-4">
