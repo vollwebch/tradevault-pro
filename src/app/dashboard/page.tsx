@@ -630,21 +630,40 @@ export default function Home(){
           {/* CALCULATOR */}
           {page==='calculator'&&(()=>{
             const cap=parseFloat(calcCap)||0,risk=parseFloat(calcRisk)||0,stop=parseFloat(calcStop)||0,entry=parseFloat(calcEntry)||0
-            const maxShares=stop>0?Math.floor((cap*risk/100)/stop):0,posSize=maxShares*entry,potLoss=maxShares*stop
-            const t1=calcDir==='LONG'?entry+stop:entry-stop,t2=calcDir==='LONG'?entry+stop*2:entry-stop*2,t3=calcDir==='LONG'?entry+stop*3:entry-stop*3
-            return(<div className="space-y-4"><Card className="bg-[#111] border-[#222]"><CardContent className="p-6 space-y-4">
-              <h3 className="text-lg font-bold">Calculadora de Riesgo</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div><Label className="text-xs text-zinc-400">Capital ($)</Label><Input value={calcCap} onChange={e=>setCalcCap(e.target.value)} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-                <div><Label className="text-xs text-zinc-400">Riesgo (%)</Label><Input value={calcRisk} onChange={e=>setCalcRisk(e.target.value)} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-                <div><Label className="text-xs text-zinc-400">Distancia al Stop ($)</Label><Input value={calcStop} onChange={e=>setCalcStop(e.target.value)} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
-                <div><Label className="text-xs text-zinc-400">Precio de Entrada ($)</Label><Input value={calcEntry} onChange={e=>setCalcEntry(e.target.value)} className="bg-[#1a1a1a] border-[#333] mt-1"/></div>
+            const riesgoMaximo=(cap*risk)/100
+            const sharesMaximas=stop>0?Math.floor(riesgoMaximo/stop):0
+            const costoTotal=sharesMaximas*entry
+            const ratios=[1,1.5,2,3,5]
+            return(<div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Panel de Parametros */}
+                <Card className="bg-[#111] border-[#222]"><CardContent className="p-6 space-y-4">
+                  <h3 className="font-semibold text-lg">Parametros</h3>
+                  <div><label className="text-zinc-300 text-sm font-medium">Capital ($)</label><input type="number" value={calcCap} onChange={e=>setCalcCap(e.target.value)} className="w-full h-9 bg-[#1a1a1a] border border-[#333] rounded-md px-3 mt-1 text-white outline-none focus:border-[#e31937] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className="text-zinc-300 text-sm font-medium">Riesgo por trade (%)</label><input type="number" step="0.1" value={calcRisk} onChange={e=>setCalcRisk(e.target.value)} className="w-full h-9 bg-[#1a1a1a] border border-[#333] rounded-md px-3 mt-1 text-white outline-none focus:border-[#e31937] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
+                    <div><label className="text-zinc-300 text-sm font-medium">Distancia al Stop ($)</label><input type="number" step="0.01" value={calcStop} onChange={e=>setCalcStop(e.target.value)} className="w-full h-9 bg-[#1a1a1a] border border-[#333] rounded-md px-3 mt-1 text-white outline-none focus:border-[#e31937] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
+                  </div>
+                  <div><label className="text-zinc-300 text-sm font-medium">Precio de Entrada ($)</label><input type="number" value={calcEntry} onChange={e=>setCalcEntry(e.target.value)} className="w-full h-9 bg-[#1a1a1a] border border-[#333] rounded-md px-3 mt-1 text-white outline-none focus:border-[#e31937] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/></div>
+                  <div className="flex gap-2"><button onClick={()=>setCalcDir('LONG')} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all border ${calcDir==='LONG'?'bg-[#00c853]/15 border-[#00c853] text-[#00c853]':'border-[#333] text-zinc-400'}`}>LONG</button><button onClick={()=>setCalcDir('SHORT')} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all border ${calcDir==='SHORT'?'bg-[#e31937]/15 border-[#e31937] text-[#e31937]':'border-[#333] text-zinc-400'}`}>SHORT</button></div>
+                </CardContent></Card>
+                {/* Panel de Resultados */}
+                <Card className="bg-[#111] border-[#222]"><CardContent className="p-6 space-y-4">
+                  <h3 className="font-semibold text-lg">Resultados</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm"><span className="text-zinc-400">Riesgo maximo</span><span className="font-semibold text-[#f59e0b]">${riesgoMaximo.toFixed(2)}</span></div>
+                    <div className="flex justify-between text-sm"><span className="text-zinc-400">Shares maximos</span><span className="font-semibold text-[#00d4ff]">{sharesMaximas}</span></div>
+                    <div className="flex justify-between text-sm"><span className="text-zinc-400">Costo total (Apalancamiento)</span><span className="font-semibold text-white">${costoTotal.toLocaleString()}</span></div>
+                  </div>
+                  <div className="mt-4"><div className="w-full bg-[#1a1a1a] rounded-full h-3 overflow-hidden"><div className="h-full bg-[#f59e0b] transition-all duration-500" style={{width:`${Math.min(risk*10,100)}%`}}></div></div><p className="text-[10px] text-zinc-500 mt-2">{risk}% del capital en riesgo</p></div>
+                </CardContent></Card>
               </div>
-              <div><Label className="text-xs text-zinc-400">Direccion</Label><div className="flex gap-2 mt-1"><Button size="sm" variant={calcDir==='LONG'?'default':'outline'} className={calcDir==='LONG'?'bg-[#00c853] text-white':'border-[#333]'} onClick={()=>setCalcDir('LONG')}>LONG</Button><Button size="sm" variant={calcDir==='SHORT'?'default':'outline'} className={calcDir==='SHORT'?'bg-[#e31937] text-white':'border-[#333]'} onClick={()=>setCalcDir('SHORT')}>SHORT</Button></div></div>
-            </CardContent></Card>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {[{l:'Max Shares',v:String(maxShares),c:'text-[#00d4ff]'},{l:'Posicion Size',v:fmt$(posSize),c:'text-white'},{l:'Perdida Potencial',v:fmt$(potLoss),c:'text-[#e31937]'},{l:'Target 1:1',v:`$${t1.toFixed(2)}`,c:'text-[#00c853]'},{l:'Target 1:3',v:`$${t3.toFixed(2)}`,c:'text-[#00c853]'}].map((s,i)=><Card key={i} className="bg-[#111] border-[#222]"><CardContent className="p-3 text-center"><p className="text-[10px] text-zinc-500">{s.l}</p><p className={`text-lg font-bold ${s.c}`}>{s.v}</p></CardContent></Card>)}
-            </div></div>)
+              {/* Tabla R:R Dinamica */}
+              <Card className="bg-[#111] border-[#222]"><CardContent className="p-6">
+                <h3 className="font-semibold text-lg mb-4">Proyecciones R:R</h3>
+                <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-b border-[#222] text-zinc-400"><th className="text-left py-2">Ratio</th><th className="text-right py-2">Precio Target</th><th className="text-right py-2">Profit Estimado</th></tr></thead><tbody>{ratios.map(r=>{const targetPrice=calcDir==='LONG'?entry+(stop*r):entry-(stop*r);const profit=riesgoMaximo*r;return(<tr key={r} className="border-b border-[#222]/50 hover:bg-[#1a1a1a]"><td className="py-3 font-semibold text-[#00d4ff]">1:{r}</td><td className="text-right py-3 text-[#00c853]">${targetPrice.toFixed(2)}</td><td className="text-right py-3 text-[#00c853]">+${profit.toFixed(2)}</td></tr>)})}</tbody></table></div>
+              </CardContent></Card>
+            </div>)
           })()}
 
           {/* CHECKLIST */}
